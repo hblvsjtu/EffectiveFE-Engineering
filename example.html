@@ -12,8 +12,84 @@
 	.title:hover {
 		opacity: 0.5;
 	}
+	ul,
+	li {
+		display: inline-block;
+		margin: 0;
+		padding: 0;
+	}
+	li {
+		margin-right: 10px;
+	}
+	ul li:last-of-type {
+		margin-right: 0;
+	}
+	.select {
+		display: none;
+	}
+	.select:before {
+        display: block;
+        content: '';
+        height: 10px;
+        opacity: 0;
+    }
+	.select:hover {
+		display: block;
+	}
+	.title:hover + .select{
+		display: block;
+	}
+	input[type="radio"] {
+		display: none;
+	}
+	input[type="radio"] + span {
+		display: inline-block;
+		padding: 3px;
+		width: 6px;
+		height: 6px;
+		border: 1px solid #000;
+		border-radius: 50%;
+		background: transparent;
+		background-clip: content-box;
+		transition: all 0.5s;
+	}
+	input[type="radio"]:checked + span{
+		background: #000;
+		background-clip: content-box;
+	}
+	input[type="radio"]  + span + label {
+		display: inline-block;
+		font-size: 12px;
+	}
+	ul {
+		width: 100%;
+	}
+	li:first-of-type:nth-last-of-type(2),
+	li:first-of-type:nth-last-of-type(2) ~ li {
+		width: 50%;
+	}
+	li:first-of-type:nth-last-of-type(3),
+	li:first-of-type:nth-last-of-type(3) ~ li {
+		width: 33.3%;
+	}
+	li:first-of-type:nth-last-of-type(4),
+	li:first-of-type:nth-last-of-type(4) ~ li {
+		width: 25%;
+	}
 </style>
 <body>
-    <h1 class="title">你好</h1>
+    <div class="title">你好</div>
+    <ul class="select">
+    	<li>选择1</li>
+    	<li>选择2</li>
+    	<li>选择3</li>
+    	<li>选择4</li>
+    </ul>
+    <input id="radio1" type="radio" name="singleSelect"></input>
+    <span></span>
+    <label for="radio1">选择1</label>
+    <input id="radio2" type="radio" name="singleSelect"></input>
+    <span></span>
+    <label for="radio2">选择2</label>
 </body>
 </html>
