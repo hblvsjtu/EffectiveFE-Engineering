@@ -76,6 +76,24 @@
 	li:first-of-type:nth-last-of-type(4) ~ li {
 		width: 25%;
 	}
+	.triangle {
+		width: 0;
+		height: 0;
+		border-left: 10px solid transparent;
+		border-right: 10px solid transparent;
+		border-bottom: 10px solid red;
+	}
+	.counterReset {
+		counter-reset: fruit 1;
+	}
+	.counterReset input:checked {
+		counter-increment: fruit;
+	}
+	.total::after {
+		content: counter(fruit);
+		font-size: 14px;
+		color: red;
+	}
 </style>
 <body>
     <div class="title">你好</div>
@@ -91,5 +109,11 @@
     <input id="radio2" type="radio" name="singleSelect"></input>
     <span></span>
     <label for="radio2">选择2</label>
+    <div class="triangle"></div>
+    <div class="counterReset">
+    	<label><input type="checkbox"></input>香蕉</label>
+    	<label><input type="checkbox"></input>苹果</label>
+    </div>
+    <p>你选择了<span class="total"></span>个水果</p>
 </body>
 </html>
