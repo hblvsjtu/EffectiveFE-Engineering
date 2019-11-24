@@ -5,9 +5,65 @@
  * @version 1.0.0
  */
 
+const webpack = require('webpack');
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const config = require('../config/index');
+const plugins = [
+  new webpack.BannerPlugin('版权所有，翻版必究'),
+  new CleanWebpackPlugin('dist'),
+  new HtmlWebpackPlugin({
+    filename: 'index.html',
+    template: 'index.html',
+    inject: 'body'
+  })
+];
+const optimization = {
+  runtimeChunk: {
+    name: entrypoint => `runtime~${entrypoint.name}`
+  }
+};
+
+if (config.staticAssertsPath.from) {
+  plugins.push(new CopyWebpackPlugin([
+    {
+      from: config.staticAssertsPath.from,
+      to: config.staticAssertsPath.to
+    }
+  ])
+  );
+}
+
+if (config.isSplitCSS) {
+  plugins.push(new ExtractTextPlugin('styles.css'));
+}
+
+if (config.isSplitChunks) {
+  optimization.splitChunks = {
+    chunks: 'async',
+    minSize: 30000,
+    maxSize: 0,
+    minChunks: 1,
+    maxAsyncRequests: 5,
+    maxInitialRequests: 3,
+    automaticNameDelimiter: '~',
+    name: true,
+    cacheGroups: {
+      vendors: {
+        test: /[\\/]node_modules[\\/]/,
+        priority: -10
+      },
+      default: {
+        minChunks: 2,
+        priority: -20,
+        reuseExistingChunk: true
+      }
+    }
+  };
+}
 
 function dir (myPath) {
   if (myPath) {
@@ -53,15 +109,23 @@ module.exports = {
         }
       },
       {
+        test: /\.css$/,
+        use: config.isSplitCSS ? ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: 'css-loader'
+        }) : ['style-loader', 'css-loader']
+      },
+      {
         test: /\.less$/,
         exclude: /(node_modules|bower_components)/,
-        use: [{
-          loader: 'style-loader' // creates style nodes from JS strings
-        }, {
-          loader: 'css-loader' // translates CSS into CommonJS
-        }, {
-          loader: 'less-loader' // compiles Less to CSS
-        }]
+        use: config.isSplitCSS ? ExtractTextPlugin.extract(['css-loader', 'less-loader']) : [
+          {
+            loader: 'style-loader' // creates style nodes from JS strings
+          }, {
+            loader: 'css-loader' // translates CSS into CommonJS
+          }, {
+            loader: 'less-loader' // compiles Less to CSS
+          }]
       },
       {
         test: /\.(png|jpg|gif)$/,
@@ -75,14 +139,8 @@ module.exports = {
       }
     ]
   },
-  plugins: [
-    new CleanWebpackPlugin('dist'),
-    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: 'index.html',
-      inject: 'body'
-    })
-  ],
+  plugins,
+  optimization,
   node: {
     // prevent webpack from injecting useless setImmediate polyfill because Vue
     // source contains it (although only uses it if it's native).

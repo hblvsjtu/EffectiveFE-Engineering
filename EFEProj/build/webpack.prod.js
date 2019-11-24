@@ -14,7 +14,8 @@ const isShowBundleAnalyzer = false; // 是否加入打包的依赖分析
 
 const plugins = [
   new UglifyJSPlugin({
-    sourceMap: true
+    sourceMap: true,
+    parallel: true
   }),
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': JSON.stringify('production')
@@ -26,6 +27,6 @@ if (isShowBundleAnalyzer) {
 }
 
 module.exports = merge(common, {
-  // mode: 'production',
+  mode: 'production',
   plugins
 });

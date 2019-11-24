@@ -38,5 +38,11 @@ module.exports = {
         }
       }
     }
-  }
+  },
+  staticAssertsPath: {
+    from: '',
+    to: ''
+  },
+  isSplitCSS: true,
+  isSplitChunks: true
 };
