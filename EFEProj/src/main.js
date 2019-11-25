@@ -5,7 +5,6 @@
  * @version 0.0.1
  */
 import _ from 'lodash';
-
 'use strict';
 
 function component () {
