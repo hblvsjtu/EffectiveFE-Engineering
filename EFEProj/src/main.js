@@ -5,11 +5,8 @@
  * @version 0.0.1
  */
 import _ from 'lodash';
-<<<<<<< HEAD
 import Vue from 'vue';
 import List from './components/List.vue';
-=======
->>>>>>> 6baa9c42152a5147c3937ac934cedc62cd0cebfd
 
 'use strict';
 
