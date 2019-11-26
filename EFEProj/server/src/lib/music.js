@@ -1,6 +1,6 @@
 /**
  * @file music.js
- * @author lvhongbin (lvhongbin@baidu.com)
+ * @author hblvsjtu (hblvsjtu@163.com)
  * @date    2019-10-06 10:54:51
  * @version 1.0.0
  */
@@ -47,28 +47,6 @@ async function executeMusic (ctx) {
   } else {
     setCORS(ctx); // 设置跨域
     switch (ctx.query.path) {
-    case "sirius/GET/musicList":
-      musicList.myParams = ctx.query.params;
-      ctx.body = musicList;
-      break;
-    case "sirius/GET/sendlog":
-      ctx.body = {
-        status: 200,
-        data: null,
-        error: null,
-        myData: ctx.query
-      };
-      break;
-    case "sirius/GET/musicUrl":
-      delay();
-      const data = getUrl(JSON.parse(ctx.query.params).id);
-      ctx.body = {
-        status: 200,
-        data,
-        error: null,
-        myParams: ctx.query.params
-      };
-      break;
     }
   }
 }
