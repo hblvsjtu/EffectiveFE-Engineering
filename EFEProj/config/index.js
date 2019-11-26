@@ -5,6 +5,7 @@
  * @version 1.0.0
  */
 const path = require('path');
+const PORT = process.env.PORT && Number(process.env.PORT);
 
 'use strict';
 module.exports = {
@@ -13,7 +14,7 @@ module.exports = {
     index: 'index.html',
     compress: true,
     host: '127.0.0.1',
-    port: 8080,
+    port: PORT || 8081,
     stats: {
       errors: true,
       modules: false,
@@ -43,6 +44,27 @@ module.exports = {
     from: '',
     to: ''
   },
-  isSplitCSS: true,
-  isSplitChunks: true
+  isShowBundleAnalyzer: false, // 是否加入打包的依赖分析
+  isSplitCSS: true, // 是否分离CSS样式
+  isSplitChunks: {
+    chunks: 'async',
+    minSize: 30000,
+    maxSize: 0,
+    minChunks: 1,
+    maxAsyncRequests: 5,
+    maxInitialRequests: 3,
+    automaticNameDelimiter: '~',
+    name: true,
+    cacheGroups: {
+      vendors: {
+        test: /[\\/]node_modules[\\/]/,
+        priority: -10
+      },
+      default: {
+        minChunks: 2,
+        priority: -20,
+        reuseExistingChunk: true
+      }
+    }
+  } // 是否分块
 };

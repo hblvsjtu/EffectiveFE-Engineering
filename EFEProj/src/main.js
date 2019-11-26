@@ -5,6 +5,8 @@
  * @version 0.0.1
  */
 import _ from 'lodash';
+import Vue from 'vue';
+import List from './components/List.vue';
 
 'use strict';
 
@@ -15,3 +17,11 @@ function component () {
 }
 
 document.body.appendChild(component());
+
+const vue = new Vue({
+  el: '#' + 'root',
+  render: h => {
+    return <List></List>;
+  }
+});
+console.log('vue = ', vue);

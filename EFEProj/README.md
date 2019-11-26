@@ -17,7 +17,7 @@
 
 
 # 安装依赖
-npm install
+npm install efeproj_vue
 
 # 启动dev
 npm run dev

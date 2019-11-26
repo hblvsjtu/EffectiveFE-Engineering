@@ -9,8 +9,8 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const common = require('./webpack.common.js');
+const config = require('../config/index');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const isShowBundleAnalyzer = false; // 是否加入打包的依赖分析
 
 const plugins = [
   new UglifyJSPlugin({
@@ -22,7 +22,7 @@ const plugins = [
   })
 ];
 
-if (isShowBundleAnalyzer) {
+if (config.isShowBundleAnalyzer) {
   plugins.push(new BundleAnalyzerPlugin());
 }
 

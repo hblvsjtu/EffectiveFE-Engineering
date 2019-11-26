@@ -7,12 +7,15 @@
 
 const webpack = require('webpack');
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const config = require('../config/index');
+
 const plugins = [
+  new VueLoaderPlugin(),
   new webpack.BannerPlugin('版权所有，翻版必究'),
   new CleanWebpackPlugin('dist'),
   new HtmlWebpackPlugin({
@@ -21,6 +24,7 @@ const plugins = [
     inject: 'body'
   })
 ];
+
 const optimization = {
   runtimeChunk: {
     name: entrypoint => `runtime~${entrypoint.name}`
@@ -38,34 +42,16 @@ if (config.staticAssertsPath.from) {
 }
 
 if (config.isSplitCSS) {
-  plugins.push(new ExtractTextPlugin('styles.css'));
+  plugins.push(new MiniCssExtractPlugin({
+    filename: 'css/[name].css', //类似出口文件
+  }));
 }
 
 if (config.isSplitChunks) {
-  optimization.splitChunks = {
-    chunks: 'async',
-    minSize: 30000,
-    maxSize: 0,
-    minChunks: 1,
-    maxAsyncRequests: 5,
-    maxInitialRequests: 3,
-    automaticNameDelimiter: '~',
-    name: true,
-    cacheGroups: {
-      vendors: {
-        test: /[\\/]node_modules[\\/]/,
-        priority: -10
-      },
-      default: {
-        minChunks: 2,
-        priority: -20,
-        reuseExistingChunk: true
-      }
-    }
-  };
+  optimization.splitChunks = config.isSplitChunks
 }
 
-function dir (myPath) {
+function dir(myPath) {
   if (myPath) {
     return path.resolve(__dirname, '../', myPath);
   } else {
@@ -79,7 +65,18 @@ module.exports = {
   },
   output: {
     filename: '[name].bundle.js',
-    path: dir('dist')
+    path: dir('dist'),
+    // library: 'VideoCommonMusicSDK',
+    // libraryTarget: 'umd',
+    // libraryExport: 'default'
+  },
+  resolve: { // 给vue模板的提供编译支持
+    extensions: ['.js', '.vue', '.json'],
+    alias: {
+      'vue$': 'vue/dist/vue.esm.js',
+      '@': dir('src')
+    },
+    symlinks: false
   },
   module: {
     rules: [
@@ -99,6 +96,10 @@ module.exports = {
         exclude: /node_modules/
       },
       {
+        test: /\.vue$/,
+        loader: 'vue-loader'
+      },
+      {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
         use: {
@@ -106,26 +107,29 @@ module.exports = {
           options: {
             presets: ['@babel/preset-env']
           }
-        }
+        },
+        include: [
+          dir('src'),
+          dir('test'),
+          dir('node_modules/webpack-dev-server/client')
+        ]
       },
       {
         test: /\.css$/,
-        use: config.isSplitCSS ? ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: 'css-loader'
-        }) : ['style-loader', 'css-loader']
+        use: config.isSplitCSS ? [MiniCssExtractPlugin.loader, 'css-loader'] : 'css-loader'
       },
       {
         test: /\.less$/,
         exclude: /(node_modules|bower_components)/,
-        use: config.isSplitCSS ? ExtractTextPlugin.extract(['css-loader', 'less-loader']) : [
-          {
-            loader: 'style-loader' // creates style nodes from JS strings
-          }, {
-            loader: 'css-loader' // translates CSS into CommonJS
-          }, {
-            loader: 'less-loader' // compiles Less to CSS
-          }]
+        use: config.isSplitCSS ? [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'less-loader'
+        ] : [
+            'vue-style-loader',
+            'css-loader',
+            'less-loader'
+          ]
       },
       {
         test: /\.(png|jpg|gif)$/,
