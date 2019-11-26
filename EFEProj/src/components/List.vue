@@ -1,7 +1,7 @@
 <template>
-<div class="title">
-  你好
-</div>
+  <div class="title">
+    你好
+  </div>
 </template>
 
 <script>
