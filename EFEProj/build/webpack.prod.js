@@ -1,6 +1,6 @@
 /**
  * webpack.prod.js
- * @authors binghongcha (hblvsjtu@163.com)
+ * @authors hblvsjtu (hblvsjtu@163.com)
  * @date    2019-11-24 15:25:54
  * @version 1.0.0
  */

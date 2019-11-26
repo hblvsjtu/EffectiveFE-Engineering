@@ -1,6 +1,6 @@
 /**
  * @file api.js
- * @author binghongcha (hblvsjtu@163.com)
+ * @author hblvsjtu (hblvsjtu@163.com)
  * @date 2019-08-06 13:08:18
  * @version 1.0.0
  */

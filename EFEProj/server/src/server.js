@@ -1,6 +1,6 @@
 /**
  * @file server.js
- * @author lvhongbin (lvhongbin@baidu.com)
+ * @author hblvsjtu (hblvsjtu@163.com)
  * @date    2019-10-06 10:54:51
  * @version 1.0.0
  */
@@ -43,7 +43,7 @@ app.use(body({
 home.get("/", async ctx => {
   const html = `
       <ul>
-        <li><a href="/music/nirvana/request.ajax">/music/nirvana/request.ajax</a></li>
+        <li><a href="/music/test/request.ajax">/music/test/request.ajax</a></li>
       </ul>
     `;
   ctx.body = html;
@@ -51,21 +51,21 @@ home.get("/", async ctx => {
 
 // music
 const music = new Router();
-music.post("/nirvana/request.ajax", executeMusic);
-music.post("/sirius/resource/upload.do", uploadMusic);
+music.post("/test/request.ajax", executeMusic);
+music.post("/test/resource/upload.do", uploadMusic);
 music.get("/play", playMusic);
 
 // template
 const template = new Router();
-template.post("/hairuo/request.ajax", executeTemplate);
+template.post("/test/request.ajax", executeTemplate);
 
 // quick
 const quick = new Router();
-quick.post("/hairuo/request.ajax", executeQuick);
+quick.post("/test/request.ajax", executeQuick);
 
 // tts
 const tts = new Router();
-tts.post("/hairuo/request.ajax", executeTTS);
+tts.post("/test/request.ajax", executeTTS);
 tts.post("/cc/api/audio/upload", uploadMusicTTS);
 tts.get("/play", playMusicTTS);
 
