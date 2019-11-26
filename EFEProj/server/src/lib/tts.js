@@ -1,6 +1,6 @@
 /**
  * @file template.js
- * @author lvhongbin (lvhongbin@baidu.com)
+ * @author hblvsjtu (hblvsjtu@163.com)
  * @date    2019-10-06 10:54:51
  * @version 1.0.0
  */
@@ -107,114 +107,6 @@ async function executeTTS (ctx) {
   {
     setCORS(ctx); // 设置跨域
     switch (body.path) {
-    case "zebra/GET/VideoSynthetiseService/unifiedMaterialUpload": // 提交视频素材
-      ctx.body = {
-        status: 200,
-        data: {
-          taskId: 298 // 提交合成的任务ID
-        },
-        errors: {}
-      };
-      break;
-    case "ADD/video/preview/materials": // 提交预览素材
-      ctx.body = {
-        status: 200,
-        data: {
-          taskId: 298 // 提交合成的任务ID
-        },
-        errors: {}
-      };
-      break;
-    case "GET/video/preview": // 查询预览视频
-      ctx.body = {
-        status: 200,
-        data: {
-          videoUrl: "http://www.navideo.baidu.com/asdfka324kfsd8or23.mp4" // 提交合成的任务ID
-        },
-        errors: {}
-      };
-      break;
-    case "zebra/GET/VideoSynthetiseService/secondEdit": // 获取视频合成的物料类型 二次编辑
-      ctx.body = getVideoMaterial;
-      break;
-    case "GET/unsuccessful/tasks": // 获取合成中与合成失败的任务
-      ctx.body = {
-        status: 200,
-        data: {
-          // 合成中
-          process: [
-            {
-              videoname: "test1",
-              taskid: 1
-            },
-            {
-              videoname: "test2",
-              taskid: 2
-            }
-          ],
-          fail: [
-            {
-              videoname: "test3",
-              taskid: 3
-            }
-          ]
-        },
-        errors: {}
-      };
-      break;
-    case "GET/opertion": // 获取账户的运营单位ID
-      ctx.body = {
-        status: 200,
-        data: {
-          id: 6
-        },
-        errors: {}
-      };
-      break;
-    case "GET/videoMtType": // 获取视频合成的模板类型
-      ctx.body = {
-        status: 200,
-        data: 0, // 0表示老模版，1表示新模版
-        errors: {}
-      };
-      break;
-    case "zebra/GET/TemplateQueryService/getTemplates": // 获取模板列表
-      ctx.body = getList;
-      break;
-    case "zebra/GET/TemplateQueryService/getLabel": // 获取行业列表
-      ctx.body = getTemplateLabel;
-      break;
-    case "zebra/GET/AudioService/getVideoNarrator": // 获取音乐列表
-      musicList.myParams = body;
-      ctx.body = musicList;
-      break;
-    case "zebra/GET/AudioService/sendLog": // 音乐打点
-      ctx.body = {
-        status: 200,
-        data: {
-          status: 0
-        },
-        error: null,
-        myData: body
-      };
-      break;
-    case "zebra/GET/AudioService/getMusicUrl": // 获取全民音乐URL
-      delay();
-      const data = getUrl(JSON.parse(body.params).id);
-      // ctx.body = {
-      //     status: 200,
-      //     data,
-      //     error: null,
-      //     myParams: body.params
-      // };
-      ctx.body = {
-        data: {
-          url: data
-        },
-        status: 0,
-        errors: []
-      };
-      break;
     }
   }
 }
