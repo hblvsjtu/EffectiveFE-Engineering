@@ -1,6 +1,6 @@
 {
   "name": "efeproj",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "一个快速启动的环境",
   "main": "index.js",
   "scripts": {

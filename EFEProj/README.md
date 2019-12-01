@@ -17,7 +17,7 @@
 
 
 # 安装依赖
-npm install
+npm install efeproj
 
 # 启动dev
 npm run dev

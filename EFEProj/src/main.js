@@ -5,11 +5,13 @@
  * @version 0.0.1
  */
 import _ from 'lodash';
+import './style/index.less';
 
 'use strict';
 
 function component () {
   var element = document.createElement('div');
+  element.id = 'hello';
   element.innerHTML = _.join(['Hello', 'webpack'], ' ');
   return element;
 }

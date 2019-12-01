@@ -1,6 +1,6 @@
 /**
  * config.js
- * @authors Your Name (you@example.org)
+ * @authors hblvsjtu (hblvsjtu@163.com)
  * @date    2019-11-24 15:24:58
  * @version 1.0.0
  */
@@ -13,7 +13,7 @@ module.exports = {
     index: 'index.html',
     compress: true,
     host: '127.0.0.1',
-    port: 8080,
+    port: 8081,
     stats: {
       errors: true,
       modules: false,
