@@ -20,15 +20,26 @@
 ### [2.1 几个原则和模式](#2.1)
 ### [2.2 其他优化策略](#2.2)
 ## [三、页面优化](#2)
-### [2.1 基本数据类型](#2.1)
-### [2.2 对象类型系统](#2.2)
-### [2.3 平台](#2.3)
-## [四、webpack打包](#3)
-### [4.1 本地测试服务器+postman](#4.1)
+### [3.1 基本数据类型](#2.1)
+### [3.2 对象类型系统](#2.2)
+### [3.3 平台](#2.3)
+## [四、webpack打包](#4)
+### [4.1](开发环境与生产环境#4.1)
+### [4.2](分离配置#4.2)
+### [4.3](loader#4.3)
+### [4.4](plugin#4.4)
+### [4.5](devserver#4.5)
 ## [五、库的设计](#4)
-### [5.1 本地测试服务器+postman](#5.1)
-## [六、本地测试](#2)
-### [6.1 本地测试服务器+postman](#6.1)
+### [5.1 配置设计](#5.1)
+## [六、单元测试](#6)
+### [6.1 macha](#6.1)
+## [七、mock服务器](#7)
+### [7.1 koa](#7.1)
+### [7.2 路由](#7.2)
+### [7.3 普通请求](#7.3)
+### [7.4 上传](#7.4)
+### [7.5 下载](#7.5)
+### [7.6 播放](#7.6)
 
             
 --------        
@@ -216,7 +227,6 @@
                 }
                 use(model['middle']);
 #### 3) 访问者模式
-<<<<<<< HEAD
 > - 
                 function vistor() {
                 }
@@ -259,32 +269,102 @@
         
 #### 1) 使用console.table代替console.log层级较深的数组或者对象
 > - 
-=======
+
+        
+--------        
+<h2 id='3'>四、webpack打包</h2>
+
+        
+<h3 id='3.1'>3.1 开发环境与生产环境</h3>  
+        
+#### 1) Performance
+> - 里面可以看帧的帧率，还有js,html,css的耗时
+#### 1) Performance
 > - 
-                function vistor() {
-                }
-                vistor.prototype.eventName = [];
-                vistor.prototype.registry = {};
-                vistor.prototype.on = function() {
-                    this.eventName.push(arguments[0]);
-                    this.registry[arguments[0]] = arguments[1]
-                }
-                vistor.prototype.emit = function() {
-                    let eventName = arguments[0];
-                    let a = Array.from(arguments)
-                    a.shift();
-                    this.registry[eventName](...a)
-                }
-#### 4) 不要滥用闭包
-> - 闭包的作用是可以使子作用域访问父作用域的变量，同时不用闭包内的变量不可见。
-> - 子作用域访问上层的作用域需要花费较多的时间，做好直接把父作用域的变量作为函数的参数传进去
+<h3 id='3.1'>3.2 分离配置</h3>  
         
-<h3 id='2.2'>2.2 其他优化策略</h3>  
+#### 1) 使用console.table代替console.log层级较深的数组或者对象
+> - 
+<h3 id='3.1'>3.2 loader</h3>  
         
-#### 1) 其他优化策略
-> - 使用三目运算符
-> - 不要出现魔数，即函数的参数含义不明显，可以先在函数前面把参数重新定义一下名称再传进去
-> - Object.assign()合并对象
-> - 减少使用forEach，map等遍历函数，多使用includes(), filter(), find()等数组方法
-> - 使用async/await 替代promise和callback hell, 对于一些callback hell可以先包装成promise再使用async/await
->>>>>>> 86b08ad91f0c99af4be64593b56aabdc8d731ced
+#### 1) 使用console.table代替console.log层级较深的数组或者对象
+> - 
+<h3 id='3.1'>3.2 plugin</h3>  
+        
+#### 1) 使用console.table代替console.log层级较深的数组或者对象
+> - 
+<h3 id='3.1'>3.2 devserver</h3>  
+        
+#### 1) 使用console.table代替console.log层级较深的数组或者对象
+> - 
+
+        
+--------        
+<h2 id='5'>五、库的设计</h2>
+
+        
+<h3 id='5.1'>5.1 配置设计</h3>  
+        
+#### 1) Performance
+> - 里面可以看帧的帧率，还有js,html,css的耗时
+#### 1) Performance
+> - 
+
+        
+--------        
+<h2 id='6'>六、单元测试</h2>
+
+        
+<h3 id='6.1'>6.1 macha</h3>  
+        
+#### 1) Performance
+> - 里面可以看帧的帧率，还有js,html,css的耗时
+#### 1) Performance
+> - 
+
+        
+--------        
+<h2 id='7'>七、mock服务器</h2>
+
+        
+<h3 id='7.1'>7.1 koa</h3>  
+        
+#### 1) Performance
+> - 里面可以看帧的帧率，还有js,html,css的耗时
+#### 1) Performance
+> - 
+
+<h3 id='7.2'>7.2 路由</h3>  
+        
+#### 1) Performance
+> - 里面可以看帧的帧率，还有js,html,css的耗时
+#### 1) Performance
+> - 
+
+<h3 id='7.3'>7.3 普通请求</h3>  
+        
+#### 1) Performance
+> - 里面可以看帧的帧率，还有js,html,css的耗时
+#### 1) Performance
+> - 
+
+<h3 id='7.4'>7.4 上传</h3>  
+        
+#### 1) Performance
+> - 里面可以看帧的帧率，还有js,html,css的耗时
+#### 1) Performance
+> - 
+
+<h3 id='7.5'>7.5 下载</h3>  
+        
+#### 1) Performance
+> - 里面可以看帧的帧率，还有js,html,css的耗时
+#### 1) Performance
+> - 
+
+<h3 id='7.6'>7.6 播放</h3>  
+        
+#### 1) Performance
+> - 里面可以看帧的帧率，还有js,html,css的耗时
+#### 1) Performance
+> - 
