@@ -216,7 +216,6 @@
                 }
                 use(model['middle']);
 #### 3) 访问者模式
-<<<<<<< HEAD
 > - 
                 function vistor() {
                 }
@@ -259,32 +258,3 @@
         
 #### 1) 使用console.table代替console.log层级较深的数组或者对象
 > - 
-=======
-> - 
-                function vistor() {
-                }
-                vistor.prototype.eventName = [];
-                vistor.prototype.registry = {};
-                vistor.prototype.on = function() {
-                    this.eventName.push(arguments[0]);
-                    this.registry[arguments[0]] = arguments[1]
-                }
-                vistor.prototype.emit = function() {
-                    let eventName = arguments[0];
-                    let a = Array.from(arguments)
-                    a.shift();
-                    this.registry[eventName](...a)
-                }
-#### 4) 不要滥用闭包
-> - 闭包的作用是可以使子作用域访问父作用域的变量，同时不用闭包内的变量不可见。
-> - 子作用域访问上层的作用域需要花费较多的时间，做好直接把父作用域的变量作为函数的参数传进去
-        
-<h3 id='2.2'>2.2 其他优化策略</h3>  
-        
-#### 1) 其他优化策略
-> - 使用三目运算符
-> - 不要出现魔数，即函数的参数含义不明显，可以先在函数前面把参数重新定义一下名称再传进去
-> - Object.assign()合并对象
-> - 减少使用forEach，map等遍历函数，多使用includes(), filter(), find()等数组方法
-> - 使用async/await 替代promise和callback hell, 对于一些callback hell可以先包装成promise再使用async/await
->>>>>>> 86b08ad91f0c99af4be64593b56aabdc8d731ced
