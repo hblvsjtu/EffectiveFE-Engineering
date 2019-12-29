@@ -6,6 +6,7 @@
  */
 import _ from 'lodash';
 import Vue from 'vue';
+import store from './store';
 import List from './components/List.vue';
 
 'use strict';
@@ -15,13 +16,15 @@ function component () {
   element.innerHTML = _.join(['Hello', 'webpack'], ' ');
   return element;
 }
-
 document.body.appendChild(component());
 
+// 现在，应用已经启动了！
 const vue = new Vue({
   el: '#' + 'root',
+  store,
   render: h => {
     return <List></List>;
   }
 });
+
 console.log('vue = ', vue);

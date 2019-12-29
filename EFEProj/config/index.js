@@ -66,5 +66,6 @@ module.exports = {
         reuseExistingChunk: true
       }
     }
-  } // 是否分块
+  }, // 是否分块
+  isUseRouter: false
 };

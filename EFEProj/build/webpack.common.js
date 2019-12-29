@@ -61,7 +61,7 @@ function dir(myPath) {
 
 module.exports = {
   entry: {
-    EFEProj: './src/main.js'
+    EFEProj: config.isUseRouter ? './src/app.js' : './src/main.js'
   },
   output: {
     filename: '[name].bundle.js',

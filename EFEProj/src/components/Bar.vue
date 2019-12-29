@@ -1,17 +1,11 @@
 <template>
-  <div>
-    <div class="title">你好</div>
-    <Bar></Bar>
-  </div>
+  <div class="title">Bar</div>
 </template>
 
 <script>
-import Bar from "./Bar";
 export default {
-  name: "List",
-  components: {
-    Bar
-  },
+  name: "Bar",
+  components: {},
   props: {
     // store: {
     //   type: Object,
@@ -20,14 +14,14 @@ export default {
   },
   data() {
     return {
-      sharedState: this.$store.state.list
+      sharedState: this.$store.state.bar
     };
   },
   methods: {},
   computed: {},
   mounted() {
-    this.$store.commit('list/increment');
-    console.log('List = ', this.sharedState.count); // -> 1
+    this.$store.commit('bar/increment');
+    console.log('Bar = ', this.sharedState.count); // -> 1
   }
 };
 </script>
