@@ -12,13 +12,15 @@
 ### 《前端工程化 体系设计与实践》作者：周俊鹏
         
 ------   
-## 目录
+## 
 ## [一、HTML/CSS优化](#1)
 ### [1.1 巧用伪类](#1.1)
 ### [1.2 HTML标签](#1.2)
 ## [二、JS代码优化](#2)
 ### [2.1 几个原则和模式](#2.1)
 ### [2.2 其他优化策略](#2.2)
+### [2.3 lodash的使用](#2.3)
+### [2.4 设计模式](#2.4)
 ## [三、页面优化](#2)
 ### [3.1 基本数据类型](#2.1)
 ### [3.2 对象类型系统](#2.2)
@@ -254,6 +256,18 @@
 > - Object.assign()合并对象
 > - 减少使用forEach，map等遍历函数，多使用includes(), filter(), find()等数组方法
 > - 使用async/await 替代promise和callback hell, 对于一些callback hell可以先包装成promise再使用async/await
+
+<h3 id='2.3'>2.3 lodash的使用</h3>  
+        
+#### 1) Array方法
+> - chunk(array, [size=1]) 根据数量分割数组
+> - difference(array, [values]) 筛选不相同的元素
+> - 升级版 加了一个迭代器 differenceBy(array, [values], [iteratee=_.identity])
+> 
+> - 不要出现魔数，即函数的参数含义不明显，可以先在函数前面把参数重新定义一下名称再传进去
+> - Object.assign()合并对象
+> - 减少使用forEach，map等遍历函数，多使用includes(), filter(), find()等数组方法
+> - 使用async/await 替代promise和callback hell, 对于一些callback hell可以先包装成promise再使用async/await
         
 --------        
 <h2 id='3'>三、页面优化</h2>
@@ -367,4 +381,3 @@
 #### 1) Performance
 > - 里面可以看帧的帧率，还有js,html,css的耗时
 #### 1) Performance
-> - 
