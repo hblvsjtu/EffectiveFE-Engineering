@@ -13,73 +13,83 @@
             
 --------     
 - [EffectiveFE-Engineering](#effectivefe-engineering)
-  - [作者：冰红茶](#%e4%bd%9c%e8%80%85%e5%86%b0%e7%ba%a2%e8%8c%b6)
-  - [参考书籍：](#%e5%8f%82%e8%80%83%e4%b9%a6%e7%b1%8d)
-    - [高效前端：《Web高效编程与优化实践》作者：李银城](#%e9%ab%98%e6%95%88%e5%89%8d%e7%ab%afweb%e9%ab%98%e6%95%88%e7%bc%96%e7%a8%8b%e4%b8%8e%e4%bc%98%e5%8c%96%e5%ae%9e%e8%b7%b5%e4%bd%9c%e8%80%85%e6%9d%8e%e9%93%b6%e5%9f%8e)
-    - [《前端工程化 体系设计与实践》作者：周俊鹏](#%e5%89%8d%e7%ab%af%e5%b7%a5%e7%a8%8b%e5%8c%96-%e4%bd%93%e7%b3%bb%e8%ae%be%e8%ae%a1%e4%b8%8e%e5%ae%9e%e8%b7%b5%e4%bd%9c%e8%80%85%e5%91%a8%e4%bf%8a%e9%b9%8f)
-  - [一、HTML/CSS优化](#%e4%b8%80htmlcss%e4%bc%98%e5%8c%96)
-    - [遵循几条大原则：](#%e9%81%b5%e5%be%aa%e5%87%a0%e6%9d%a1%e5%a4%a7%e5%8e%9f%e5%88%99)
-    - [1.1 巧用伪类](#11-%e5%b7%a7%e7%94%a8%e4%bc%aa%e7%b1%bb)
+  - [作者：冰红茶](#作者冰红茶)
+  - [参考书籍：](#参考书籍)
+    - [高效前端：《Web高效编程与优化实践》作者：李银城](#高效前端web高效编程与优化实践作者李银城)
+    - [《前端工程化 体系设计与实践》作者：周俊鹏](#前端工程化-体系设计与实践作者周俊鹏)
+  - [一、HTML/CSS优化](#一htmlcss优化)
+    - [遵循几条大原则：](#遵循几条大原则)
+    - [1.1 巧用伪类](#11-巧用伪类)
       - [1) hover](#1-hover)
       - [2) checked](#2-checked)
-      - [3) 前向伪类选择器nth-last-of-type(n)](#3-%e5%89%8d%e5%90%91%e4%bc%aa%e7%b1%bb%e9%80%89%e6%8b%a9%e5%99%a8nth-last-of-typen)
-    - [1.2 HTML标签](#12-html%e6%a0%87%e7%ad%be)
-      - [1) 画一个三角形](#1-%e7%94%bb%e4%b8%80%e4%b8%aa%e4%b8%89%e8%a7%92%e5%bd%a2)
-      - [2) 尽可能使用伪元素](#2-%e5%b0%bd%e5%8f%af%e8%83%bd%e4%bd%bf%e7%94%a8%e4%bc%aa%e5%85%83%e7%b4%a0)
-  - [二、js优化](#%e4%ba%8cjs%e4%bc%98%e5%8c%96)
-    - [2.1 几个原则和模式](#21-%e5%87%a0%e4%b8%aa%e5%8e%9f%e5%88%99%e5%92%8c%e6%a8%a1%e5%bc%8f)
-      - [1) 避免使用全局变量](#1-%e9%81%bf%e5%85%8d%e4%bd%bf%e7%94%a8%e5%85%a8%e5%b1%80%e5%8f%98%e9%87%8f)
-      - [2) 改变样式](#2-%e6%94%b9%e5%8f%98%e6%a0%b7%e5%bc%8f)
-      - [3) 避免使用重复代码](#3-%e9%81%bf%e5%85%8d%e4%bd%bf%e7%94%a8%e9%87%8d%e5%a4%8d%e4%bb%a3%e7%a0%81)
-      - [3) 访问者模式](#3-%e8%ae%bf%e9%97%ae%e8%80%85%e6%a8%a1%e5%bc%8f)
-      - [4) 不要滥用闭包](#4-%e4%b8%8d%e8%a6%81%e6%bb%a5%e7%94%a8%e9%97%ad%e5%8c%85)
-    - [2.2 其他优化策略](#22-%e5%85%b6%e4%bb%96%e4%bc%98%e5%8c%96%e7%ad%96%e7%95%a5)
-      - [1) 其他优化策略](#1-%e5%85%b6%e4%bb%96%e4%bc%98%e5%8c%96%e7%ad%96%e7%95%a5)
-      - [1) Array方法](#1-array%e6%96%b9%e6%b3%95)
-  - [三、页面优化](#%e4%b8%89%e9%a1%b5%e9%9d%a2%e4%bc%98%e5%8c%96)
-    - [3.1 chrome的优化工具](#31-chrome%e7%9a%84%e4%bc%98%e5%8c%96%e5%b7%a5%e5%85%b7)
+      - [3) 前向伪类选择器nth-last-of-type(n)](#3-前向伪类选择器nth-last-of-typen)
+    - [1.2 HTML标签](#12-html标签)
+      - [1) 画一个三角形](#1-画一个三角形)
+      - [2) 尽可能使用伪元素](#2-尽可能使用伪元素)
+  - [二、js优化](#二js优化)
+    - [2.1 几个原则和模式](#21-几个原则和模式)
+      - [1) 避免使用全局变量](#1-避免使用全局变量)
+      - [2) 改变样式](#2-改变样式)
+      - [3) 避免使用重复代码](#3-避免使用重复代码)
+      - [3) 访问者模式](#3-访问者模式)
+      - [4) 不要滥用闭包](#4-不要滥用闭包)
+    - [2.2 其他优化策略](#22-其他优化策略)
+      - [1) 其他优化策略](#1-其他优化策略)
+      - [1) Array方法](#1-array方法)
+  - [三、页面优化](#三页面优化)
+    - [3.1 chrome的优化工具](#31-chrome的优化工具)
       - [1) Performance](#1-performance)
       - [1) Performance](#1-performance-1)
-      - [1) 使用console.table代替console.log层级较深的数组或者对象](#1-%e4%bd%bf%e7%94%a8consoletable%e4%bb%a3%e6%9b%bfconsolelog%e5%b1%82%e7%ba%a7%e8%be%83%e6%b7%b1%e7%9a%84%e6%95%b0%e7%bb%84%e6%88%96%e8%80%85%e5%af%b9%e8%b1%a1)
-  - [四、webpack打包](#%e5%9b%9bwebpack%e6%89%93%e5%8c%85)
-    - [3.1 开发环境与生产环境](#31-%e5%bc%80%e5%8f%91%e7%8e%af%e5%a2%83%e4%b8%8e%e7%94%9f%e4%ba%a7%e7%8e%af%e5%a2%83)
+      - [1) 使用console.table代替console.log层级较深的数组或者对象](#1-使用consoletable代替consolelog层级较深的数组或者对象)
+  - [四、webpack打包](#四webpack打包)
+    - [3.1 开发环境与生产环境](#31-开发环境与生产环境)
       - [1) Performance](#1-performance-2)
       - [1) Performance](#1-performance-3)
-      - [1) 使用console.table代替console.log层级较深的数组或者对象](#1-%e4%bd%bf%e7%94%a8consoletable%e4%bb%a3%e6%9b%bfconsolelog%e5%b1%82%e7%ba%a7%e8%be%83%e6%b7%b1%e7%9a%84%e6%95%b0%e7%bb%84%e6%88%96%e8%80%85%e5%af%b9%e8%b1%a1-1)
-      - [1) 使用console.table代替console.log层级较深的数组或者对象](#1-%e4%bd%bf%e7%94%a8consoletable%e4%bb%a3%e6%9b%bfconsolelog%e5%b1%82%e7%ba%a7%e8%be%83%e6%b7%b1%e7%9a%84%e6%95%b0%e7%bb%84%e6%88%96%e8%80%85%e5%af%b9%e8%b1%a1-2)
-      - [1) 使用console.table代替console.log层级较深的数组或者对象](#1-%e4%bd%bf%e7%94%a8consoletable%e4%bb%a3%e6%9b%bfconsolelog%e5%b1%82%e7%ba%a7%e8%be%83%e6%b7%b1%e7%9a%84%e6%95%b0%e7%bb%84%e6%88%96%e8%80%85%e5%af%b9%e8%b1%a1-3)
-      - [1) 使用console.table代替console.log层级较深的数组或者对象](#1-%e4%bd%bf%e7%94%a8consoletable%e4%bb%a3%e6%9b%bfconsolelog%e5%b1%82%e7%ba%a7%e8%be%83%e6%b7%b1%e7%9a%84%e6%95%b0%e7%bb%84%e6%88%96%e8%80%85%e5%af%b9%e8%b1%a1-4)
-  - [五、库的设计](#%e4%ba%94%e5%ba%93%e7%9a%84%e8%ae%be%e8%ae%a1)
-    - [5.1 配置设计](#51-%e9%85%8d%e7%bd%ae%e8%ae%be%e8%ae%a1)
+      - [1) 使用console.table代替console.log层级较深的数组或者对象](#1-使用consoletable代替consolelog层级较深的数组或者对象-1)
+      - [1) 使用console.table代替console.log层级较深的数组或者对象](#1-使用consoletable代替consolelog层级较深的数组或者对象-2)
+      - [1) 使用console.table代替console.log层级较深的数组或者对象](#1-使用consoletable代替consolelog层级较深的数组或者对象-3)
+      - [1) 使用console.table代替console.log层级较深的数组或者对象](#1-使用consoletable代替consolelog层级较深的数组或者对象-4)
+  - [五、库的设计](#五库的设计)
+    - [5.1 配置设计](#51-配置设计)
       - [1) Performance](#1-performance-4)
       - [1) Performance](#1-performance-5)
-  - [六、单元测试](#%e5%85%ad%e5%8d%95%e5%85%83%e6%b5%8b%e8%af%95)
+  - [六、单元测试](#六单元测试)
     - [6.1 macha](#61-macha)
       - [1) Performance](#1-performance-6)
       - [1) Performance](#1-performance-7)
-  - [七、mock服务器](#%e4%b8%83mock%e6%9c%8d%e5%8a%a1%e5%99%a8)
+  - [七、mock服务器](#七mock服务器)
     - [7.1 koa](#71-koa)
       - [1) Performance](#1-performance-8)
       - [1) Performance](#1-performance-9)
-    - [7.2 路由](#72-%e8%b7%af%e7%94%b1)
+    - [7.2 路由](#72-路由)
       - [1) Performance](#1-performance-10)
       - [1) Performance](#1-performance-11)
-    - [7.3 普通请求](#73-%e6%99%ae%e9%80%9a%e8%af%b7%e6%b1%82)
+    - [7.3 普通请求](#73-普通请求)
       - [1) Performance](#1-performance-12)
       - [1) Performance](#1-performance-13)
-    - [7.4 上传](#74-%e4%b8%8a%e4%bc%a0)
+    - [7.4 上传](#74-上传)
       - [1) Performance](#1-performance-14)
       - [1) Performance](#1-performance-15)
-    - [7.5 下载](#75-%e4%b8%8b%e8%bd%bd)
+    - [7.5 下载](#75-下载)
       - [1) Performance](#1-performance-16)
       - [1) Performance](#1-performance-17)
-    - [7.6 播放](#76-%e6%92%ad%e6%94%be)
+    - [7.6 播放](#76-播放)
       - [1) Performance](#1-performance-18)
       - [1) Performance](#1-performance-19)
-  - [八、Vue](#%e5%85%abvue)
-    - [8.1 koa](#81-koa)
-  - [九、React](#%e4%b9%9dreact)
-    - [9.1 基本使用](#91-%e5%9f%ba%e6%9c%ac%e4%bd%bf%e7%94%a8)
+  - [八、Vue](#八vue)
+    - [8.1 八股文](#81-八股文)
+      - [1) ``compute`` 和 ``watch``有什么区别](#1-compute-和-watch有什么区别)
+      - [2) diff算法](#2-diff算法)
+      - [3) 生命周期](#3-生命周期)
+      - [4) 双向绑定](#4-双向绑定)
+      - [5) 预编译](#5-预编译)
+    - [8.2 性能优化](#82-性能优化)
+      - [1) 在map循环中添加不同的id](#1-在map循环中添加不同的id)
+      - [2) 对于不变的对象使用Object.freeze](#2-对于不变的对象使用objectfreeze)
+    - [8.3 原则与规范](#83-原则与规范)
+      - [1) 数据与视图分离](#1-数据与视图分离)
+  - [九、React](#九react)
+    - [9.1 基本使用](#91-基本使用)
       - [1) Performance](#1-performance-20)
 
 ## 一、HTML/CSS优化
@@ -429,9 +439,138 @@
         
 --------        
 ## 八、Vue
-
         
-### 8.1 koa
+### 8.1 八股文
+#### 1) ``compute`` 和 ``watch``有什么区别
+项目|``compute``|``watch``
+-|-|-
+异步|不支持|支持
+缓存|支持|不支持
+流|*一个数据 <- 多个数据*|*行为 <- 一个数据*
+属性|``get``(默认)和``set``|``handler``、``immediate``、``deep``
+参数|无|``curVal``、``prevVal``
+
+#### 2) diff算法
+> - 是否是相同的节点，如果节点不同(key和sel节点的选择器)，直接替换
+> - 如果节点相同，分析子节点的5种情况，进行不同的处理
+>> - ``oldVnode === vnode``
+>> - ``oldVnode``有子节点``vnode``没有
+>> - ``oldVnode``没有子节点``vnode``有
+>> - 都有文本节点
+>> - 都有子节点
+> - 递归处理子节点
+> - 比较时为同层级比较，直接把时间复杂度从O(3) -> O(1)
+> - 比较的时候是从首尾向中间进行，一旦``StartIdx > EndIdx``表明oldCh和newCh至少有一个已经遍历完了，就会结束比较。如果有key，还会从用key生成的对象oldKeyToIdx中查找匹配的节点，所以为节点设置key可以更高效的利用dom
+
+#### 3) 生命周期
+执行链：父``beforeCreate`` => 父``created`` => 父``beforeMount`` => 子``beforeCreate`` => 子``created`` => 子``beforeMount`` => 子``mounted`` => 父``mounted``
+父``beforeUpdate`` => 子``beforeUpdate`` => 子``updated`` => 父``updated``
+
+周期|执行顺序|特点
+-|-|-
+``beforeCreate``|先父后子|可以访问``vm.$parent``和``vm.$createElement``
+``created``|先父后子|可以访问``data``、``props``、``methods``、``computed``、``watch``、``inject``
+``beforeMount``|先父后子|获取并可以访问``vm.$el``(el提供的真实节点)
+``mounted``|先子后父|``render``函数 -> ``vnode`` -> 真实节点
+``beforeDestory``|先父后子|
+``destoryed``|先子后父|删除``vm``, 销毁``vm._watcher``，删除数据``observer``中的引用
+``beforeUpdate``|先父后子|
+``updated``|先子后父|
+
+#### 4) 双向绑定
+> - 观察者模式 一个主题多个观察者
+```js
+        // 主题，接收状态变化，触发每个观察者
+        class Subject {
+            constructor() {
+                this.state = 0
+                this.observers = []
+            }
+            getState() {
+                return this.state
+            }
+            setState(state) {
+                this.state = state
+                this.notifyAllObservers()
+            }
+            attach(observer) {
+                this.observers.push(observer)
+            }
+            notifyAllObservers() {
+                this.observers.forEach(observer => {
+                    observer.update()
+                })
+            }
+        }
+
+        // 观察者，等待被触发
+        class Observer {
+            constructor(name, subject) {
+                this.name = name
+                this.subject = subject
+                this.subject.attach(this)
+            }
+            update() {
+                console.log(`${this.name} update, state: ${this.subject.getState()}`)
+            }
+        }
+
+        // 测试代码
+        let s = new Subject()
+        let o1 = new Observer('o1', s)
+        let o2 = new Observer('o2', s)
+        let o3 = new Observer('o3', s)
+
+        s.setState(1)
+        s.setState(2)
+        s.setState(3)
+```
+
+> - 发布订阅者模式
+```js
+    var pubsub = (() => {
+        var topics = {};
+        function on(topic,fn){
+            if (!topics[topic]) topics[topic] = []; 
+            topics[topic].push(fn);
+        }
+        function emit(topic,...args){
+            if (!topics[topic]) return;
+            topics[topic].forEach(fn => fn(...args);
+        }
+        return {
+            on,
+            emit
+        }
+    })()
+```
+模式|特点
+-|-
+观察者模式| 主题和观察者需要相互关联，观察者拥有update方法 一对多
+发布订阅者模式| 发布者和订阅者不需要直接联系 多对多 比较简单，多作为库来使用
+
+> - 对象监听方法
+> 
+> - 数组窃听方法
+> - 缺点：无法监听对象的属性的创建和删除
+
+#### 5) 预编译
+> - render函数 > templates模板 > el属性挂载元素outerHTML
+> - 在包含单文件组件的项目中，使用 webpack 打包时已经将单文件组件中的模板预先编译成了渲染函数
+> - 也存在实例化vue但是没有render、templates、el的情况，就是使用vue作为eventbus使用时
+
+构建模式|运行时机|webpack配置|特点
+-|-|-|-
+运行时构建|vue实例化创建节点且存在render函数属性时|默认或者``alias: {'vue$': 'vue/dist/vue.runtime.common.js'}``|删除了模板的编译功能，无法支持带``template``属性的Vue实例选项
+独立构建|vue实例化创建节点并且不存在render函数属性时|``alias: {'vue$': 'vue/dist/vue.common.js'}``|需要完整的模板编译功能
+
+
+### 8.2 性能优化
+#### 1) 在map循环中添加不同的id
+#### 2) 对于不变的对象使用Object.freeze
+
+### 8.3 原则与规范
+#### 1) 数据与视图分离
 
 
 --------        
