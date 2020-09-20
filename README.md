@@ -83,6 +83,7 @@
       - [3) 生命周期](#3-生命周期)
       - [4) 双向绑定](#4-双向绑定)
       - [5) 预编译](#5-预编译)
+      - [6) 组件间通讯](#6-组件间通讯)
     - [8.2 性能优化](#82-性能优化)
       - [1) 在map循环中添加不同的id](#1-在map循环中添加不同的id)
       - [2) 对于不变的对象使用Object.freeze](#2-对于不变的对象使用objectfreeze)
@@ -450,6 +451,8 @@
 属性|``get``(默认)和``set``|``handler``、``immediate``、``deep``
 参数|无|``curVal``、``prevVal``
 
+注意：当依赖的属性变化时，computed不会立即重新计算生成新的值，而是先标记为脏数据，当下次computed被获取时候，才会进行重新计算并返回。
+
 #### 2) diff算法
 > - 是否是相同的节点，如果节点不同(key和sel节点的选择器)，直接替换
 > - 如果节点相同，分析子节点的5种情况，进行不同的处理
@@ -470,7 +473,7 @@
 -|-|-
 ``beforeCreate``|先父后子|可以访问``vm.$parent``和``vm.$createElement``
 ``created``|先父后子|可以访问``data``、``props``、``methods``、``computed``、``watch``、``inject``
-``beforeMount``|先父后子|获取并可以访问``vm.$el``(el提供的真实节点)
+``beforeMount``|先父后子|获取并可以访问``vm.$el``(el提供的真实节点)，在这之前template模板已导入渲染函数编译。而当前阶段虚拟Dom已经创建完成，即将开始渲染。在此时也可以对数据进行更改，不会触发updated。
 ``mounted``|先子后父|``render``函数 -> ``vnode`` -> 真实节点
 ``beforeDestory``|先父后子|
 ``destoryed``|先子后父|删除``vm``, 销毁``vm._watcher``，删除数据``observer``中的引用
@@ -482,8 +485,8 @@
 ```js
         // 主题，接收状态变化，触发每个观察者
         class Subject {
-            constructor() {
-                this.state = 0
+            constructor(state) {
+                this.state = state
                 this.observers = []
             }
             getState() {
@@ -550,8 +553,66 @@
 发布订阅者模式| 发布者和订阅者不需要直接联系 多对多 比较简单，多作为库来使用
 
 > - 对象监听方法
-> 
+```js
+function activeObject(obj) {
+    Object.keys(obj).forEach(key => {
+        let val = obj[key];
+        let subject = null, watcher = null;
+        Object.defineProperty(obj, key, {
+            enumerable: true,
+            configurable: true,
+            get: () => {
+                if (!subject) {
+                    subject = new Subject(val);
+                    watcher = new Observer(key, subject);
+                }
+                return subject.getState();
+            },
+            set: value => {
+                if (val !== value) {
+                    val = value;
+                    subject && subject.setState(val);
+                }
+            }
+        })
+    })
+}
+```
+
 > - 数组窃听方法
+```js
+const methods = ['push', 'pop'];
+
+function activeArray(obj) {
+    const wrapArrayPrototype = Object.create(Array.prototype); 
+    subject = new Subject(obj);
+    watcher = new Observer(obj, subject);
+    methods.forEach(method => {           
+        wrapArrayPrototype[method] = function(...args) {
+            const result = Array.prototype[method].call(this, ...args);
+            subject.setState(result);
+            return result;
+        }
+    })
+    obj.__proto__ = wrapArrayPrototype;
+}
+
+```
+> - 综合
+```js
+    function activeData(obj) {
+        const type = Object.prototype.toString.call(obj).slice(8, -1);
+        if (type === 'Object') {
+            activeObject(obj);
+            Object.values(obj).forEach(child => activeData(child));
+        }
+        else if (type === 'Array') {
+            activeArray(obj);
+            obj.forEach(child => activeData(child));
+        }
+    }
+
+```
 > - 缺点：无法监听对象的属性的创建和删除
 
 #### 5) 预编译
@@ -564,6 +625,12 @@
 运行时构建|vue实例化创建节点且存在render函数属性时|默认或者``alias: {'vue$': 'vue/dist/vue.runtime.common.js'}``|删除了模板的编译功能，无法支持带``template``属性的Vue实例选项
 独立构建|vue实例化创建节点并且不存在render函数属性时|``alias: {'vue$': 'vue/dist/vue.common.js'}``|需要完整的模板编译功能
 
+#### 6) 组件间通讯
+对象|方法
+-|-
+父子|props和$emit
+多层嵌套|``provide``和``inject``
+兄弟|store或者vue实例(``$on ``和 ``$emit``)
 
 ### 8.2 性能优化
 #### 1) 在map循环中添加不同的id
