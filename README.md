@@ -84,11 +84,17 @@
       - [4) 双向绑定](#4-双向绑定)
       - [5) 预编译](#5-预编译)
       - [6) 组件间通讯](#6-组件间通讯)
+      - [7) 指令](#7-指令)
+      - [8) 自定义指令](#8-自定义指令)
+      - [9) 事件修饰符](#9-事件修饰符)
+      - [10) 混入mixins](#10-混入mixins)
+      - [11) 自定义插件](#11-自定义插件)
     - [8.2 性能优化](#82-性能优化)
       - [1) 在map循环中添加不同的id](#1-在map循环中添加不同的id)
       - [2) 对于不变的对象使用Object.freeze](#2-对于不变的对象使用objectfreeze)
     - [8.3 原则与规范](#83-原则与规范)
       - [1) 数据与视图分离](#1-数据与视图分离)
+    - [8.4 小技巧](#84-小技巧)
   - [九、React](#九react)
     - [9.1 基本使用](#91-基本使用)
       - [1) Performance](#1-performance-20)
@@ -629,15 +635,112 @@ function activeArray(obj) {
 对象|方法
 -|-
 父子|props和$emit
-多层嵌套|``provide``和``inject``
+多层嵌套|``provide``和``inject`` 或者``eventbus``（`` = new vue()``）
 兄弟|store或者vue实例(``$on ``和 ``$emit``)
+``$ref``/``$parent``/``$children``|``this.$refs.list.getList()``
 
+
+#### 7) 指令
+
+名称|正常写法|缩写|特点
+-|-|-|-
+组件数据绑定|``v-bind:props``|``:props``|
+插槽|``v-slot:name``|``#name``|获取插槽作用域 ``v-slot:name="scope"``
+方法绑定|``v-on:func``|``@func``|获取额外参数和子组件通讯参数 ``@callback=handleChange(index, $event)``
+双向绑定|``v-model``| - | 语法糖，等同于 ``<Child :value="value" @input="handleInputValue"></Child>`` 子组件必须emit input事件：``props: {value: Number}  $emit('input', value) ``，当然了，你也可以手动修改参数名和方法名，使用``model``字段: ``{prop: 'checked',event: 'change'}``
+只渲染一次|v-once|-|-
+循环|v-for|-|
+判断|``v-if`` ``v-else-if`` ``v-else``|-|根据表达式的值的真假条件，销毁或重建元素
+是否显示|``v-show``|-|根据表达式之真假值，切换元素的 ``display`` CSS 属性节点还在文档中
+innerHTML|``v-html``|-|更新元素的 ``innerHTML``
+textContent|``v-text``|-|更新元素的 ``textContent``
+
+
+#### 8) 自定义指令
+```js
+// 入口
+import Auth from './utils/auth';
+Vue.use(Auth);
+
+// auth.js 提供给install方法
+const AUTH_LIST = ['admin']
+
+function checkAuth(auths) {
+    return AUTH_LIST.some(item => auths.includes(item))
+}
+
+function install(Vue, options = {}) {
+    Vue.directive('auth', {
+        inserted(el, binding) {
+            if (!checkAuth(binding.value)) {
+                el.parentNode && el.parentNode.removeChild(el)
+            }
+        }
+    })
+}
+
+export default { install }
+
+// 组件使用时
+<button v-auth="['user']">提交</button>
+```
+
+#### 9) 事件修饰符
+名称|特点
+-|-
+.stop|阻止事件冒泡
+.capture|使用事件捕获模式
+.prevent|阻止默认事件
+.self|事件只在自己身上发生时才触发，如果触发其他元素通过冒泡或者捕获等方式不会被触发，当自身触发后依然会往外进行冒泡
+.once|事件只发生一次
+.sync|数据双向绑定，父组件``<Child :value="total" v-on:update:change="total = $event"/>``子组件``$emit('update:change', value)``
+表单修饰符``.lazy``, ``.trim``, ``.number``|配合v-model使用, ``.number``如果输入的第一个字符是数字，那就只能输入数字，否则他输入的就是普通字符串。
+.passive|当页面滚动的时候就会一直触发 onScroll 事件，这个其实是存在性能问题的，尤其是在移动端，当给他加上 .passive 后触发的就不会那么频繁了。
+鼠标按钮修饰符|：鼠标左键点击；``.right``：鼠标右键点击；``.middle``：鼠标中键点击；
+键盘按键修饰符|``.enter`` ``.tab`` ``.delete`` (捕获“删除”和“退格”键) ``.esc`` ``.space`` ``.up`` ``.down`` ``.left`` ``.right``,``.exact ``修饰符允许你控制由精确的系统修饰符组合触发的事件。
+**串联使用事件修饰符的时候，需要注意其顺序，同样2个修饰符进行串联使用，顺序不同，结果大不一样。@click.prevent.self 会阻止所有的点击事件，而 @click.self.prevent 只会阻止对自身元素的点击。**
+
+#### 10) 混入mixins
+> - 混入的先被执行，组件数据部分后执行，如果有重复属性以组件数据为准
+
+#### 11) 自定义插件
+```js
+        MyPlugin.install = function (Vue, options) {
+            // 1. 添加全局方法或 property
+            Vue.myGlobalMethod = function () {
+                // 逻辑...
+            }
+
+            // 2. 添加全局资源
+            Vue.directive('my-directive', {
+                bind (el, binding, vnode, oldVnode) {
+                // 逻辑...
+                }
+                ...
+            })
+
+            // 3. 注入组件选项
+            Vue.mixin({
+                created: function () {
+                // 逻辑...
+                }
+                ...
+            })
+
+            // 4. 添加实例方法
+            Vue.prototype.$myMethod = function (methodOptions) {
+                // 逻辑...
+            }
+        }
+```
 ### 8.2 性能优化
 #### 1) 在map循环中添加不同的id
 #### 2) 对于不变的对象使用Object.freeze
 
 ### 8.3 原则与规范
 #### 1) 数据与视图分离
+
+### 8.4 小技巧
 
 
 --------        
