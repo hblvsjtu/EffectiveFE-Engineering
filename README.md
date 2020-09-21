@@ -82,7 +82,7 @@
       - [12) Fragments](#12-fragments)
   - [四、React](#四react)
     - [4.1 八股文](#41-八股文)
-      - [1)](#1)
+      - [1) 单向数据流](#1-单向数据流)
     - [4.2 性能优化](#42-性能优化)
     - [4.3 原则与规范](#43-原则与规范)
     - [4.4 小技巧](#44-小技巧)
@@ -953,7 +953,9 @@ export default { install }
 ## 四、React
 
 ### 4.1 八股文
-#### 1) 
+#### 1) 单向数据流
+> - ``view`` -> ``action`` -> ``store`` -> ``reducer`` -> ``store`` -> ``view``
+> - ``view`` ``dispatch`` 一个 ``action``，``store``根据``action``的类型``reducer``一个``new state``，``store``拿到``new state``后更新``view``
 ### 4.2 性能优化
 ### 4.3 原则与规范
 ### 4.4 小技巧
