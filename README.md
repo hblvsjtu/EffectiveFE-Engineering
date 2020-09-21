@@ -67,9 +67,25 @@
       - [4) ``hookEvent ``的使用](#4-hookevent-的使用)
       - [5) ``watch``](#5-watch)
       - [6) 渲染函数中使用 JSX](#6-渲染函数中使用-jsx)
+    - [3.5 vue3.0的特点](#35-vue30的特点)
+      - [1) 性能比2.0快1.3~2倍](#1-性能比20快132倍)
+      - [2) 使用``typescript``重构](#2-使用typescript重构)
+      - [3) ``Tree shaking support``](#3-tree-shaking-support)
+      - [4) ``Composition API``](#4-composition-api)
+      - [5) 自定义渲染API ``Custom Renderer API``](#5-自定义渲染api-custom-renderer-api)
+      - [6) 更先进的组件](#6-更先进的组件)
+      - [7) ``v-model``统一双向数据流，删除``.sync``](#7-v-model统一双向数据流删除sync)
+      - [8) ``v-if``、``v-for``优先级问题](#8-v-ifv-for优先级问题)
+      - [9) 去掉``functional: true``](#9-去掉functional-true)
+      - [10) vue文件结构](#10-vue文件结构)
+      - [11) ``Teleport`` 传送门](#11-teleport-传送门)
+      - [12) Fragments](#12-fragments)
   - [四、React](#四react)
-    - [4.1 基本使用](#41-基本使用)
-      - [1) Performance](#1-performance)
+    - [4.1 八股文](#41-八股文)
+      - [1)](#1)
+    - [4.2 性能优化](#42-性能优化)
+    - [4.3 原则与规范](#43-原则与规范)
+    - [4.4 小技巧](#44-小技巧)
 
 ## 一、HTML/CSS优化
         
@@ -715,6 +731,11 @@ export default { install }
                 <slot />
             </button>
         </template>
+        <script>
+        export default {
+            props: ['level']
+        }
+        </script>
 ```
 ```js
         // 或者 https://juejin.im/post/6872128694639394830
@@ -823,10 +844,117 @@ export default { install }
 
 #### 6) 渲染函数中使用 JSX
 
+### 3.5 vue3.0的特点
+#### 1) 性能比2.0快1.3~2倍
+> - diff 算法优化
+>> - vue2.0的VNode比较是全量的，vue3.0只比较PatchFlag标记标记节点，静态节点不比较
+>> - cachehandlers 事件侦听缓存 vue2.0的事件绑定是动态的，每次都会重新创建，vue3.0会缓存不变的事件
+#### 2) 使用``typescript``重构
+#### 3) ``Tree shaking support``
+#### 4) ``Composition API``
+#### 5) 自定义渲染API ``Custom Renderer API``
+#### 6) 更先进的组件
+> - ``Fragment`` ``Teleport(Protal)`` ``Suspense``
+#### 7) ``v-model``统一双向数据流，删除``.sync``
+#### 8) ``v-if``、``v-for``优先级问题
+> - 在2.x是``v-for``优先级高，在3.0中``v-if``的优先级高
+#### 9) 去掉``functional: true``
+```js
+        import { h } from 'vue'
+
+        const FuncComp = (props, context) => {
+            return h(`h${props.name}`, context.attrs, context.slots)
+        }
+
+        FuncComp.props = ['level']
+
+        export default FuncComp
+```
+#### 10) vue文件结构
+> - ``beforeCreate``和``created``钩子使用``setup``函数替代
+> - props解构会使其丧失响应式的
+> - 一个组件中可写多个v-model指令
+```html
+        <!-- 
+            作者：宫小白
+            链接：https://juejin.im/post/6874314855281590280
+            来源：掘金
+            著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+         -->
+        <!-- 父组件 -->
+        <test01 v-model:foo="a" v-model:bar="b"></test01>
+        <!-- 子组件 -->
+        <template>
+            <div>{{num2}}</div>
+            <input type="text" :value="foo" @input="$emit('update:foo',$event.target.value)" />
+            <input type="text" :value="bar" @input="$emit('update:bar',$event.target.value)" />
+        </template>
+        <script>
+        import { ref, reactive, computed, watch, onMounted, onUpdated, onUnmounted, provide, inject } from "vue";
+        export default {
+            props: {
+                data: String,
+            },
+            emits: ["update:foo", "update:bar"],, // 用于v-model
+            setup (props, context) {
+                provide('xx','1234')
+		        const data=inject('xx', 该参数为默认值);
+                const num = ref(1);
+                const obj = reactive({
+                    name: "gxb",
+                    age: 18,
+                    num,
+                });
+                const num2 = computed(() => num.value + 1);
+                const num3 = computed({
+                    get: () => num,
+                    set: value => num.value = value
+                });
+                watch(num, (name, preName) => {
+                    console.log(`new ${name}---old ${preName}`);
+                });
+                // 监听多个
+                watch([num, ()=>obj.name], ([newNum, newName], [oldNum, oldName]) => {
+                    console.log(`new ${(newNum)},${(newName)}---old ${(oldNum)},${oldName}`);
+                });
+
+                // 生命周期
+                onBeforeMounted(() => {
+                    console.log('beforeMounted!')
+                });
+                onMounted(() => {
+                    console.log('mounted!')
+                });
+                onUpdated(() => {
+                    console.log('updated!')
+                });
+                onUnmounted(() => {
+                    console.log('unmounted!')
+                });
+                return { num, obj, num2, num3 };
+            },
+        };
+        </script>
+``` 
+#### 11) ``Teleport`` 传送门
+> - 把节点挂载到body上
+```html
+    <teleport to="body">
+        <div v-if="flag">
+            <div>模态框</div>
+        </div>
+    </teleport>
+```
+#### 12) Fragments
+> - 原来template节点下只能放一个节点，现在可以放多个
+
+
 --------        
 ## 四、React
 
-        
-### 4.1 基本使用
-#### 1) Performance
+### 4.1 八股文
+#### 1) 
+### 4.2 性能优化
+### 4.3 原则与规范
+### 4.4 小技巧
  
