@@ -36,48 +36,8 @@
     - [2.2 其他优化策略](#22-其他优化策略)
       - [1) 其他优化策略](#1-其他优化策略)
       - [1) Array方法](#1-array方法)
-  - [三、页面优化](#三页面优化)
-    - [3.1 chrome的优化工具](#31-chrome的优化工具)
-      - [1) Performance](#1-performance)
-      - [1) Performance](#1-performance-1)
-      - [1) 使用console.table代替console.log层级较深的数组或者对象](#1-使用consoletable代替consolelog层级较深的数组或者对象)
-  - [四、webpack打包](#四webpack打包)
-    - [3.1 开发环境与生产环境](#31-开发环境与生产环境)
-      - [1) Performance](#1-performance-2)
-      - [1) Performance](#1-performance-3)
-      - [1) 使用console.table代替console.log层级较深的数组或者对象](#1-使用consoletable代替consolelog层级较深的数组或者对象-1)
-      - [1) 使用console.table代替console.log层级较深的数组或者对象](#1-使用consoletable代替consolelog层级较深的数组或者对象-2)
-      - [1) 使用console.table代替console.log层级较深的数组或者对象](#1-使用consoletable代替consolelog层级较深的数组或者对象-3)
-      - [1) 使用console.table代替console.log层级较深的数组或者对象](#1-使用consoletable代替consolelog层级较深的数组或者对象-4)
-  - [五、库的设计](#五库的设计)
-    - [5.1 配置设计](#51-配置设计)
-      - [1) Performance](#1-performance-4)
-      - [1) Performance](#1-performance-5)
-  - [六、单元测试](#六单元测试)
-    - [6.1 macha](#61-macha)
-      - [1) Performance](#1-performance-6)
-      - [1) Performance](#1-performance-7)
-  - [七、mock服务器](#七mock服务器)
-    - [7.1 koa](#71-koa)
-      - [1) Performance](#1-performance-8)
-      - [1) Performance](#1-performance-9)
-    - [7.2 路由](#72-路由)
-      - [1) Performance](#1-performance-10)
-      - [1) Performance](#1-performance-11)
-    - [7.3 普通请求](#73-普通请求)
-      - [1) Performance](#1-performance-12)
-      - [1) Performance](#1-performance-13)
-    - [7.4 上传](#74-上传)
-      - [1) Performance](#1-performance-14)
-      - [1) Performance](#1-performance-15)
-    - [7.5 下载](#75-下载)
-      - [1) Performance](#1-performance-16)
-      - [1) Performance](#1-performance-17)
-    - [7.6 播放](#76-播放)
-      - [1) Performance](#1-performance-18)
-      - [1) Performance](#1-performance-19)
-  - [八、Vue](#八vue)
-    - [8.1 八股文](#81-八股文)
+  - [三、Vue](#三vue)
+    - [3.1 八股文](#31-八股文)
       - [1) ``compute`` 和 ``watch``有什么区别](#1-compute-和-watch有什么区别)
       - [2) diff算法](#2-diff算法)
       - [3) 生命周期](#3-生命周期)
@@ -89,15 +49,27 @@
       - [9) 事件修饰符](#9-事件修饰符)
       - [10) 混入mixins](#10-混入mixins)
       - [11) 自定义插件](#11-自定义插件)
-    - [8.2 性能优化](#82-性能优化)
-      - [1) 在map循环中添加不同的id](#1-在map循环中添加不同的id)
+      - [12) 过滤器](#12-过滤器)
+      - [13) nextTick与更新循环](#13-nexttick与更新循环)
+      - [13) vue-loader是什么](#13-vue-loader是什么)
+    - [3.2 性能优化](#32-性能优化)
+      - [1) 在map循环中添加不同的key值，就地复用](#1-在map循环中添加不同的key值就地复用)
       - [2) 对于不变的对象使用Object.freeze](#2-对于不变的对象使用objectfreeze)
-    - [8.3 原则与规范](#83-原则与规范)
+      - [3) `` v-cloak``解决页面闪烁问题](#3-v-cloak解决页面闪烁问题)
+      - [4) ``v-once`` 和 ``v-pre`` 提升性能](#4-v-once-和-v-pre-提升性能)
+      - [5) 使用函数式组件](#5-使用函数式组件)
+    - [3.3 原则与规范](#33-原则与规范)
       - [1) 数据与视图分离](#1-数据与视图分离)
-    - [8.4 小技巧](#84-小技巧)
-  - [九、React](#九react)
-    - [9.1 基本使用](#91-基本使用)
-      - [1) Performance](#1-performance-20)
+    - [3.4 小技巧](#34-小技巧)
+      - [1) 父子组件透传](#1-父子组件透传)
+      - [2) 作用域插槽](#2-作用域插槽)
+      - [3) 动态指令参数](#3-动态指令参数)
+      - [4) ``hookEvent ``的使用](#4-hookevent-的使用)
+      - [5) ``watch``](#5-watch)
+      - [6) 渲染函数中使用 JSX](#6-渲染函数中使用-jsx)
+  - [四、React](#四react)
+    - [4.1 基本使用](#41-基本使用)
+      - [1) Performance](#1-performance)
 
 ## 一、HTML/CSS优化
         
@@ -109,16 +81,17 @@
         
 #### 1) hover
 > - 高亮：hover与opacity配合
-                
-                .title:hover {
-                    opacity: 0.5;
-                }
+```html
+        .title:hover {
+            opacity: 0.5;
+        }
 
-                <h1 class="title">你好</h1>
+        <h1 class="title">你好</h1>
+```
 > - 显示子菜单
 >> - 这里有一个问题，两个组件需要紧邻着，否则如果存在间隙的话两个组件hover的过程变得不连续，显示就会变得失效。
 >> - 但是实际业务中，需要两个紧邻组件中的是需要缝隙的，这时候可以使用透明伪元素解决问题
-```js
+```html
         ul,
         li {
             display: inline-block;
@@ -158,7 +131,7 @@
 ```
 #### 2) checked
 > - 修改radio/checkbox的样式
-```js
+```html
         input[type="radio"] + span {
             display: inline-block;
             padding: 3px;
@@ -189,7 +162,7 @@
                     
 #### 3) 前向伪类选择器nth-last-of-type(n)
 > - 多列宽度自适应
-```js
+```html
         ul,
         li {
             display: inline-block;
@@ -224,7 +197,7 @@
         
 #### 1) 画一个三角形
 > - 利用不同border边的透明度
-```js
+```html
         .triangle {
             width: 0;
             height: 0;
@@ -239,7 +212,7 @@
 > - 伪元素原生计算值是inline
 > - 输入框的不可读可以使用伪元素进行覆盖
 > - CSS计数器count
-```js
+```html
         .counterReset {
             counter-reset: fruit 1;
         }
@@ -331,123 +304,10 @@
 > - 使用async/await 替代promise和callback hell, 对于一些callback hell可以先包装成promise再使用async/await
         
 --------        
-## 三、页面优化
-
+     
+## 三、Vue
         
-### 3.1 chrome的优化工具
-        
-#### 1) Performance
-> - 里面可以看帧的帧率，还有js,html,css的耗时
-#### 1) Performance
-> - 
-<h3 id='3.1'>3.2 控制台打印</h3>  
-        
-#### 1) 使用console.table代替console.log层级较深的数组或者对象
-> - 
-
-        
---------        
-## 四、webpack打包
-
-        
-### 3.1 开发环境与生产环境
-        
-#### 1) Performance
-> - 里面可以看帧的帧率，还有js,html,css的耗时
-#### 1) Performance
-> - 
-<h3 id='3.1'>3.2 分离配置</h3>  
-        
-#### 1) 使用console.table代替console.log层级较深的数组或者对象
-> - 
-<h3 id='3.1'>3.2 loader</h3>  
-        
-#### 1) 使用console.table代替console.log层级较深的数组或者对象
-> - 
-<h3 id='3.1'>3.2 plugin</h3>  
-        
-#### 1) 使用console.table代替console.log层级较深的数组或者对象
-> - 
-<h3 id='3.1'>3.2 devserver</h3>  
-        
-#### 1) 使用console.table代替console.log层级较深的数组或者对象
-> - 
-
-        
---------        
-## 五、库的设计
-
-        
-### 5.1 配置设计  
-        
-#### 1) Performance
-> - 里面可以看帧的帧率，还有js,html,css的耗时
-#### 1) Performance
-> - 
-
-        
---------        
-## 六、单元测试
-
-        
-### 6.1 macha 
-        
-#### 1) Performance
-> - 里面可以看帧的帧率，还有js,html,css的耗时
-#### 1) Performance
-> - 
-
-        
---------        
-## 七、mock服务器
-
-        
-### 7.1 koa 
-        
-#### 1) Performance
-> - 里面可以看帧的帧率，还有js,html,css的耗时
-#### 1) Performance
-> - 
-
-### 7.2 路由
-        
-#### 1) Performance
-> - 里面可以看帧的帧率，还有js,html,css的耗时
-#### 1) Performance
-> - 
-
-### 7.3 普通请求 
-        
-#### 1) Performance
-> - 里面可以看帧的帧率，还有js,html,css的耗时
-#### 1) Performance
-> - 
-
-### 7.4 上传
-        
-#### 1) Performance
-> - 里面可以看帧的帧率，还有js,html,css的耗时
-#### 1) Performance
-> - 
-
-### 7.5 下载
-        
-#### 1) Performance
-> - 里面可以看帧的帧率，还有js,html,css的耗时
-#### 1) Performance
-> - 
-
-### 7.6 播放  
-        
-#### 1) Performance
-> - 里面可以看帧的帧率，还有js,html,css的耗时
-#### 1) Performance
-
-        
---------        
-## 八、Vue
-        
-### 8.1 八股文
+### 3.1 八股文
 #### 1) ``compute`` 和 ``watch``有什么区别
 项目|``compute``|``watch``
 -|-|-
@@ -619,12 +479,18 @@ function activeArray(obj) {
     }
 
 ```
-> - 缺点：无法监听对象的属性的创建和删除
+> - Watcher订阅者是Observer和Compile之间通信的桥梁，主要做的事情是:
+>> - 实例化时往主题subject里面添加自己
+>> - 必须有一个update()方法
+>> - 待属性变动subject.notice()通知时，能调用自身的update()方法，并触发Compile中绑定的回调。
+> - 缺点：无法监听对象的属性的创建和删除，可以使用``this.$set``
+
 
 #### 5) 预编译
 > - render函数 > templates模板 > el属性挂载元素outerHTML
 > - 在包含单文件组件的项目中，使用 webpack 打包时已经将单文件组件中的模板预先编译成了渲染函数
 > - 也存在实例化vue但是没有render、templates、el的情况，就是使用vue作为eventbus使用时
+> - 编译时 先转化为AST树，在转化为渲染函数，最后返回Vnode节点
 
 构建模式|运行时机|webpack配置|特点
 -|-|-|-
@@ -636,8 +502,9 @@ function activeArray(obj) {
 -|-
 父子|props和$emit
 多层嵌套|``provide``和``inject`` 或者``eventbus``（`` = new vue()``）
-兄弟|store或者vue实例(``$on ``和 ``$emit``)
-``$ref``/``$parent``/``$children``|``this.$refs.list.getList()``
+状态共享``Vue.observable``|``const store = Vue.observable({ count: 0 }); const mutations = {setCount(count) {store.count = count;}};``
+vue实例(``$on ``和 ``$emit``)|``vue.$on`` ``vue.$emit`` ``vue.$off``
+其他``$ref``/``$parent``/``$children``|``this.$refs.list.getList()``
 
 
 #### 7) 指令
@@ -671,11 +538,20 @@ function checkAuth(auths) {
 
 function install(Vue, options = {}) {
     Vue.directive('auth', {
-        inserted(el, binding) {
+        componentUpdated(el, binding) {
             if (!checkAuth(binding.value)) {
                 el.parentNode && el.parentNode.removeChild(el)
             }
         }
+        // bind：只调用一次，指令第一次绑定到元素时调用。在这里可以进行一次性的初始化设置。
+
+        // inserted：被绑定元素插入父节点时调用 (仅保证父节点存在，但不一定已被插入文档中)。
+
+        // update：所在组件的 VNode 更新时调用，但是可能发生在其子 VNode 更新之前。指令的值可能发生了改变，也可能没有。
+
+        // componentUpdated：指令所在组件的 VNode 及其子 VNode 全部更新后调用。
+
+        // unbind：只调用一次，指令与元素解绑时调用。
     })
 }
 
@@ -733,20 +609,224 @@ export default { install }
             }
         }
 ```
-### 8.2 性能优化
-#### 1) 在map循环中添加不同的id
-#### 2) 对于不变的对象使用Object.freeze
 
-### 8.3 原则与规范
+#### 12) 过滤器
+
+```html
+    <!-- 在双花括号中 -->
+    {{ message | filterA | filterB }}
+
+    <!-- 在 `v-bind` 中 -->
+    <div v-bind:id="rawId | formatId"></div>
+```
+
+```js
+    // 局部
+    filters: {
+        capitalize: function (value) {
+            if (!value) return ''
+            value = value.toString()
+            return value.charAt(0).toUpperCase() + value.slice(1)
+        }
+    }
+
+    // 全局
+    Vue.filter('capitalize', function (value) {
+        if (!value) return ''
+        value = value.toString()
+        return value.charAt(0).toUpperCase() + value.slice(1)
+    })
+
+    new Vue({
+        // ...
+    })
+```
+
+#### 13) nextTick与更新循环
+> - 在Vue更新数据的时候，视图不会立即更新，因为在数据更新过程中同一变量可能被修改多次，所以会有一个批处理的过程，保留最后一次修改变量的结果，并把最终结果更新视图。
+> - 步骤
+>> - 同步修改数据, Vue 开启一个异步队列，并缓冲在此事件循环中发生的所有数据改变。如果同一个 watcher 被多次触发，只会被推入到队列中一次
+>> - 查找异步队列，推入执行栈，执行callback[事件循环]并更新视图, （``promise.then``或者HTML5的``MutationObserver``，如果环境不支持就使用``setTimeout(fn, 0)``）
+>> - nextTick拿到更新后视图，在同一事件循环中，如果存在多个nextTick，将会按最初的执行顺序进行调用；
+> - 官方文档说明：注意 mounted 不会承诺所有的子组件也都一起被挂载。如果你希望等到整个视图都渲染完毕，可以用 vm.$nextTick
+```js
+        mounted: function () {
+            this.$nextTick(function () {
+                // Code that will run only after the
+                // entire view has been rendered
+            })
+        }
+```
+
+#### 13) vue-loader是什么
+> - vue文件的一个加载器，跟template/js/style转换成js模块。
+
+
+### 3.2 性能优化
+#### 1) 在map循环中添加不同的key值，就地复用
+#### 2) 对于不变的对象使用Object.freeze
+#### 3) `` v-cloak``解决页面闪烁问题
+> - v-cloak 指令保持在元素上直到关联实例结束编译，利用它的特性，结合 CSS 的规则 ``[v-cloak] { display: none }`` 一起使用就可以隐藏掉未编译好的 Mustache 标签，直到实例准备完毕，但是个人认为加个loading体验会更好
+```html
+    // template 中
+    <div class="#app" v-cloak>
+        <p>{{value.name}}</p>
+    </div>
+
+    // css 中
+    [v-cloak] {
+        display: none;
+    }
+```
+#### 4) ``v-once`` 和 ``v-pre`` 提升性能
+> - ``v-pre`` 给我们去决定要不要跳过这个元素和它的子元素的编译过程。可以用来显示原始 Mustache 标签。跳过大量没有指令的节点会加快编译。
+> - ``v-once`` 只会渲染一次，后面的重新渲染都会被跳过
+
+#### 5) 使用函数式组件
+> - 无状态，无数据响应，无生命周期，没有instance实例, 只会根据传进来的props进行数据渲染，基本的骨架如下
+```js
+        Vue.component('my-component', {
+            functional: true, // 必要
+            // Props 是可选的
+            props: {
+                // ...
+            },
+            // 为了弥补缺少的实例
+            // 提供第二个参数作为上下文
+            render (createElement, context) {
+                return createElement('div', context.data, [context.scopedSlots.default({
+                    a:1 // 作为插槽的作用域参数
+                })])
+            }
+        })
+```
+// 或者
+```html
+        
+        <template functional>
+            <button
+                class="btn btn-primary"
+                v-bind="data.attrs"
+                v-on="listeners"
+            >
+            <p v-for="item in props.items" @click="props.handleClick(item);">
+                {{ item }}
+            </p>
+                <slot />
+            </button>
+        </template>
+```
+```js
+        // 或者 https://juejin.im/post/6872128694639394830
+        // 根据不同的情况渲染不同的组件
+        var EmptyList = { /* ... */ }
+        var TableList = { /* ... */ }
+        var OrderedList = { /* ... */ }
+        var UnorderedList = { /* ... */ }
+
+        Vue.component('smart-list', {
+            functional: true, // 声明 functional: true，表明它是一个函数式组件
+            props: {
+                items: {
+                type: Array,
+                required: true
+                },
+                isOrdered: Boolean
+            },
+            // 为了弥补缺少的实例
+            // 提供第二个参数作为上下文
+            render: function (createElement, context) { // 组件中所有的一切都是通过 context 传递的
+                // 根据不同的情况渲染不同的组件
+                function appropriateListComponent () {
+                var items = context.props.items
+
+                if (items.length === 0)           return EmptyList
+                if (typeof items[0] === 'object') return TableList
+                if (context.props.isOrdered)      return OrderedList
+
+                return UnorderedList
+                }
+
+                return createElement(
+                appropriateListComponent(),
+                context.data, // 传递给组件的整个数据对象
+                context.children // `VNode` 子节点的数组
+                )
+            }
+        })
+```
+
+### 3.3 原则与规范
 #### 1) 数据与视图分离
 
-### 8.4 小技巧
+### 3.4 小技巧
+#### 1) 父子组件透传
+> - 属性透传``v-bind="$props"``或者``v-bind="$attrs"``
+```html
+        <template>
+            <child-component v-bind="$props"/>
+        </template>
 
+        <script>
+        import ChildComponent from '@/components/ChildComponent'
+        
+        export default {
+            props: { // 注意这里的校验props
+                ...ChildComponent.options.props
+            }
+        }
+        </script>
+```
+> - 对象透传 也可传递某一特定对象的属性，与``provide``和``inject``的区别：``provide``和``inject``绑定并不是可响应的
+```html
+        <!-- obj = {name: '', id: ''} -->
+        <Child v-bind="obj"></Child>
+        <!-- 等价于 -->
+        <Child :name="obj.name" :id="obj.id"></Child>
+```
+> - 事件监听透传 ``v-bind="$listeners"`` 但不包括.native修饰器的
+
+#### 2) 作用域插槽
+```html
+    <!-- 子组件 -->
+    <div>
+        <slot name="head" :id="id"><slot>
+        <slot name="footer" :item="item"><slot>
+    </div>
+
+    <!-- 父组件 -->
+    <child>
+        <template v-slot:head="scope">{{scope.id}}<template>
+        <template v-slot:footer="{item}">{{item}}<template>
+    </child>
+```
+
+#### 3) 动态指令参数
+> - ``<div @[event]="handleChange"></div>``
+
+#### 4) ``hookEvent ``的使用
+> - 可以在模板中监听子组件的生命周期钩子，好处是可以不破坏第三方的源码的同时监听其生命周期
+> - ``<ThirdPart @hook:updated="handleUpdated"></ThirdPart>``
+> - 也可以使用``vm.$on('hooks:beforeDestory', cb)`` 或者 ``vm.$once('hooks:beforeDestory', cb)``，可以使代码的可读性更好
+
+#### 5) ``watch``
+> - watch 有一个特点，初始化变量的是时候是不会执行回调的，可以使用``immediate: true``
+> - `deep: true``可以进行深度监听，但有时☝🏻监听某一层，可以这样写
+```js
+        watch: {
+            'obj.a': {
+                handler(newVal, oldVal) {
+                },
+            }
+        }
+```
+
+#### 6) 渲染函数中使用 JSX
 
 --------        
-## 九、React
+## 四、React
 
         
-### 9.1 基本使用
+### 4.1 基本使用
 #### 1) Performance
  
