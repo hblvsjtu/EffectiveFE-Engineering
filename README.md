@@ -83,6 +83,11 @@
   - [四、React](#四react)
     - [4.1 八股文](#41-八股文)
       - [1) 单向数据流](#1-单向数据流)
+      - [2) ``setState``是同步还是异步](#2-setstate是同步还是异步)
+      - [3) 通讯](#3-通讯)
+      - [4) 为什么使用框架而不是原生](#4-为什么使用框架而不是原生)
+      - [5) ``redux``的``middleware``机制](#5-redux的middleware机制)
+      - [6) thunk](#6-thunk)
     - [4.2 性能优化](#42-性能优化)
     - [4.3 原则与规范](#43-原则与规范)
     - [4.4 小技巧](#44-小技巧)
@@ -956,6 +961,151 @@ export default { install }
 #### 1) 单向数据流
 > - ``view`` -> ``action`` -> ``store`` -> ``reducer`` -> ``store`` -> ``view``
 > - ``view`` ``dispatch`` 一个 ``action``，``store``根据``action``的类型``reducer``一个``new state``，``store``拿到``new state``后更新``view``
+
+#### 2) ``setState``是同步还是异步
+> - ``setState``只在合成事件和钩子函数中是“异步”的，在原生事件和 ``setTimeout`` 中都是同步的。
+> - setState的“异步”并不是说内部由异步代码实现，其实本身执行的过程和代码都是同步的，只是合成事件和钩子函数的调用顺序在更新之前，导致在合成事件和钩子函数中没法立马拿到更新后的值，形式了所谓的“异步”，此外可以通过 ``setState(newState, cb)`` 中的cb拿到更新后的结果。
+> - 一句话总结：``react``管得到的就是异步 管不到的就是同步
+
+发生时机|特点
+-|-
+批量更新|创建一个异步队列``updateQueue``，通过 ``firstUpdate`` 、 ``lastUpdate`` 、`` lastUpdate.next`` 去维护这个队列，相同的``key``会被覆盖，只保留最后一个更新，这样的话就可以避免多次更新同一个``state``
+合成事件|合成事件的代码放在``try``里面执行，此时去读``state``里面的值还是以前的，所以就会造成异步的错觉，最后执行``finally``的时候次啊回执行``performSyncWork``方法，更新``state``并渲染视图
+生命周期|如果在``componentDidMount``中执行``SetState``，需要在执行完``componentDidmount``后才去``commitUpdateQueue``更新
+原生事件|没有走合成事件的逻辑，并不像合成事件或钩子函数中被``return``，而直接走``performSyncWork``去更新，所以当在原生事件中``setState``后，能同步拿到更新后的``state``值
+``setTimeout``|基于``event Loop``的模型下，没有被react包装过，``setTimeout``中里去``setState``总能拿到最新的``state``值
+
+#### 3) 通讯
+> - 
+方式|特点
+父子|props
+兄弟|父state子props
+多层|``Provider``，``Consumer``和``Context``
+``eventbus``|``on`` ``emit``
+
+```js
+        // util.js
+        import React from 'react'
+        let { Consumer, Provider } = React.createContext();//创建 context 并暴露Consumer和Provider模式
+        export {
+            Consumer,
+            Provider
+        }
+```
+
+```html
+        <!-- 父组件 -->
+        <!-- 导入 Provider -->
+        import {Provider} from "../../utils/context"
+
+        <Provider value={name}>
+            <div>
+                <p>父组件定义的值:{name}</p>
+                <Child />
+            </div>
+        </Provider>
+```
+
+```js
+        // 导入Consumer
+        import { Consumer } from "../../utils/context"
+        function Son(props) {
+            return (
+                //Consumer容器,可以拿到上文传递下来的name属性,并可以展示对应的值
+                <Consumer>
+                    {
+                        name => (
+                            <div
+                                style={{
+                                    border: "1px solid blue",
+                                    width: "60%",
+                                    margin: "20px auto",
+                                    textAlign: "center"
+                                }}
+                            >
+                                // 在 Consumer 中可以直接通过 name 获取父组件的值
+                                <p>子组件。获取父组件的值:{name}</p>
+                            </div>
+                        )
+                    }
+                </Consumer>
+            );
+        }
+        export default Son;
+```
+
+#### 4) 为什么使用框架而不是原生
+> - *组件化* ``react``的组件化可以做到函数级别的原子组件
+> - *天然分层* ``MVVM``模式，代码解耦更容易读写
+> - *开发效率* 不必手动更新DOM，提高开发效率
+> - *生态* 数据流管理结构和UI库都有成熟的解决方案
+
+#### 5) ``redux``的``middleware``机制
+> - 使用``applyMiddleware`` ``API``
+> - 借鉴koa的洋葱圈模型
+```js
+        // 手动包装dispatch
+        getDispatchWrapper(store) {
+            let next = store.dispatch;
+            return action => {
+                // before TODO
+                const result = next(action);
+                // after TODO
+                return result;
+            }
+        }
+
+        // middlewares = [getDispatchWrapper1, getDispatchWrapper2, ...];
+        function applyMiddleware(middlewares) {
+            middlewares
+            .reverse()
+            .forEach(getDispatchWrapper => store.dispatch = getDispatchWrapper(store));
+        }
+```
+
+> - 上面的做法是每次更新store.dispatch方法的引用，只想一个新的函数，此外还有一种方式进行链式调用，使用next作为传参代替store.dispatch
+
+```js
+        // 改进 克里希化getDispatchWrapper
+        const middle = store => next => action => {
+            // before TODO
+            console.log('dispatching', action);
+
+            const result = next(action);
+
+            // after TODO
+            console.log('next state', store.getState());
+
+            return result;
+        }
+
+        // middlewares = [getDispatchWrapper1, getDispatchWrapper2, ...];
+        function applyMiddleware(middlewares) {
+            middlewares
+            .reverse()
+            .reduce((ret, middle) => middle(store)(ret), store.dispatch)
+        }
+```
+#### 6) thunk
+> - 判断``action``：如果是``function``类型，就调用这个``function``（并传入``dispatch``和``getState`` 及``extraArgument`` 为参数），而不是任由让它到达 ``reducer``，因为 ``reducer`` 是个纯函数，``Redux`` 规定到达 ``reducer`` 的 ``action`` 必须是一个 ``plain object`` 类型。
+
+```js
+        function createThunkMiddleware(extraArgument) {
+            return ({ dispatch, getState }) => next => action => {
+                if (typeof action === 'function') {
+                    return action(dispatch, getState, extraArgument);
+                }
+
+                return next(action);
+            };
+        }
+
+        const thunk = createThunkMiddleware();
+        thunk.withExtraArgument = createThunkMiddleware;
+
+        export default thunk;
+```
+
 ### 4.2 性能优化
 ### 4.3 原则与规范
 ### 4.4 小技巧
