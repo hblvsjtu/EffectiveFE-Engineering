@@ -88,9 +88,18 @@
       - [4) 为什么使用框架而不是原生](#4-为什么使用框架而不是原生)
       - [5) ``redux``的``middleware``机制](#5-redux的middleware机制)
       - [6) thunk](#6-thunk)
+      - [7) react-redux](#7-react-redux)
+      - [8) 组件/逻辑复用以及各自优缺点](#8-组件逻辑复用以及各自优缺点)
+      - [9) ``HOC``的理解](#9-hoc的理解)
+      - [9) ``React.forwardRef``](#9-reactforwardref)
+      - [10) ``fiber``如何理解](#10-fiber如何理解)
+      - [11) 生命周期](#11-生命周期)
     - [4.2 性能优化](#42-性能优化)
     - [4.3 原则与规范](#43-原则与规范)
     - [4.4 小技巧](#44-小技巧)
+      - [1) ``Portal``](#1-portal)
+      - [2) Fragment](#2-fragment)
+      - [3) StrictMode](#3-strictmode)
 
 ## 一、HTML/CSS优化
         
@@ -961,6 +970,7 @@ export default { install }
 #### 1) 单向数据流
 > - ``view`` -> ``action`` -> ``store`` -> ``reducer`` -> ``store`` -> ``view``
 > - ``view`` ``dispatch`` 一个 ``action``，``store``根据``action``的类型``reducer``一个``new state``，``store``拿到``new state``后更新``view``
+> - redux更新视图使用了订阅发布模式
 
 #### 2) ``setState``是同步还是异步
 > - ``setState``只在合成事件和钩子函数中是“异步”的，在原生事件和 ``setTimeout`` 中都是同步的。
@@ -980,8 +990,9 @@ export default { install }
 方式|特点
 父子|props
 兄弟|父state子props
-多层|``Provider``，``Consumer``和``Context``
-``eventbus``|``on`` ``emit``
+跨层级通信|``Provider``，``Consumer``和``Context``
+发布订阅模式|``eventbus`` ``on`` ``emit``
+全局状态管理工具|``Redux``或者``Mobx``
 
 ```js
         // util.js
@@ -1106,7 +1117,137 @@ export default { install }
         export default thunk;
 ```
 
+#### 7) react-redux
+> - 工作原理
+>> - 获取state,  connect通过context获取Provider中的store, store.getState()获取整个store tree 上所有state
+>> - 包装原组件，将``mapStateToProps``, ``mapDispatchToProps``已属性的形式传入``WrappedComponent``，``mapStateToProps``订阅更新，``mapDispatchToProps``发布更新
+>> - 监听store tree，如果state变化了就调用this.setState()触发视图更新
+> - 从 ``dispatch`` -> ``reduce`` -> ``getState`` 这条流里面如果没有使用异步控制的话，可以同步拿到最新的``state``
+> - 从 ``dispatch`` -> ``reduce`` -> ``connect`` -> ``initSubscription`` -> ``trySubscribe``-> ``props`` 这条流里面，使用了``setState``的方法，所以会表现出【异步】
+
+#### 8) 组件/逻辑复用以及各自优缺点
+方式|优点|缺点
+-|-|-
+``mixin``|-|``mixin``跟组件之间存在隐式依赖，依赖关系不透明，增加维护成本，特别是多个``mixin``共存的情况下，状态增加不可预测性；属性之间会进行打平，增加不可预测性
+``HOC``|通过从外层传``props``到组件的方式，不更改组件的state，降低耦合度;传入的参数跟返回组件自身的参数具有天然的层级结构，降低复杂度|扩展性限制:无法从外部访问子组件的state，因此无法通过``shouldComponentUpdate``过滤掉不必要的更新（``React.PureComponent``可以解决这个问题）;``Ref`` 传递问题被阻断（``React.forwardRef``可以解决）；命名冲突
+``React Hooks``|简洁、解耦、组合、函数友好|学习成本、写法上有限制（不能出现在条件、循环中）, ``React.memo``并不能完全替代``shouldComponentUpdate``（因为拿不到 ``state change``，只针对 ``props change``）
+
+#### 9) ``HOC``的理解
+> - ``HOC``本身不是一个``component``, 而是一个``function``
+> - 输入的参数是``component``，返回也是一个``component``
+> - 不是``react``的API，而是一种基于React特性形成的设计模式
+> - 使用的场景``redux``中的``connect``，``react-router``中的``withRouter``
+> - 应用
+>> - props的增强
+>> - 鉴权
+>> - 生命周期劫持
+```js
+        import React, {createContext} from 'react';
+        const {Provider, Consumer} = createContext();
+        const getNewComp = (Comp, newProps) => {
+            return props => (
+                props.login
+                ? <Consumer>
+                    {
+                        value => <Comp {...{...props, ...newProps, ...value}} />
+                    }
+                </Consumer>
+                : <NoRight />
+            );
+        };
+
+        // Search是一个子组件
+        const SuperSearch = getNewComp(Search, {a: 1});
+        const SuperInput = getNewComp(Input, {a: 2});
+```
+```html
+        <Provider value={{b: 3}}>
+            <SuperSearch name="search" login={true} />
+            <SuperInput name="input" />
+        </Provider>
+```
+> - 缺点：多层嵌套调试会很麻烦，可以劫持props，如果不约定可能会造成冲突
+
+#### 9) ``React.forwardRef``
+> - 一般来讲，ref不能用于函数组件，因为函数组件没有实例，不能获取组件对象
+> - 但是现在有需求：获取函数组件内部某个元素的dom，那咋办？``React.forwardRef``应运而生
+```js
+    import React, {PureComponent, forwardRef, createRef} from 'react';
+    const Comp = forwardRef((props, ref) => <span ref={ref}>nihao</span>;
+    export default class extends PureComponent {
+        constructor(props) {
+            super(props);
+            this.title = createRef();
+        }
+
+        componentDidMount() {
+            this.props.init();
+            console.log(this.title.current);
+        }
+        render() {
+            return <Comp ref={this.title} />
+        }
+    }
+```
+
+#### 10) ``fiber``如何理解
+> - 单线程调度算法
+> - ``React 16``以前使用``reconcilation``用的是递归，中断困难，而``fiber``用的是循环
+> - 一种将 ``recocilation``分拆成多个小任务，可以随时停止，恢复。停止恢复的时机取决于当前的一帧（16ms）内，还有没有足够的时间允许计算。
+> - 时间分片正是基于可随时打断、重启的Fiber架构,可打断当前任务,优先处理紧急且重要的任务,保证页面的流畅运行。
+
+#### 11) 生命周期
+> - 16.0版本以前渲染是同步的，16.0版本以后是异步的，这意味着在render函数之前的所有函数都有可能被执行多次，所以这也是``UNSAVE_componentWillMount``，``UNSAFE_componentWillReceiveProps``，``UNSAFE_componentWillUpdate``，被标注为不安全的原因
+
+生命周期|特点
+-|-
+``constructor``|``super(props)``，否则我们无法在构造函数里拿到 ``this``
+``getDerivedStateFromProps``|静态函数，无法获取this，根据新的 props 和当前的 state 来调整新的 state。
+``UNSAVE_componentWillMount``|在reader之前，同步调用setState不会引发渲染，此方法是服务端渲染唯一会调用的生命周期函数。常用于当支持服务器渲染时，需要同步获取数据的场景。
+``render``|期望是一个纯函数，任何跟数据相关的逻辑请放在componentDidMount 和 componentDidUpdate 中
+``React Updates DOM and refs``|-
+``componentDidMount``|适合网络请求和添加订阅。如果直接调用``setState``。它将触发额外渲染，但此渲染会发生在浏览器更新屏幕之前。如此保证了即使在 ``render``两次调用的情况下，用户也不会看到中间状态。
+``UNSAFE_componentWillReceiveProps``|考虑到因为父组件引发渲染可能要根据 props 更新 state 的需要而设立的，会在已挂载的组件接收新的 ``props`` 之前被调用
+``getDerivedStateFromProps``|替代了``UNSAFE_componentWillReceiveProps``
+``shouldComponentUpdate``|``shouldComponentUpdate(nextProps, nextState) {}``根据此函数的返回值来判断是否进行重新渲染，``true`` 表示重新渲染，``false`` 表示不重新渲染，默认返回 ``true``，可以作为性能优化的手段。但是官方提倡我们使用内置的 ``PureComponent`` 来减少重新渲染的次数，而不是手动编写 ``shouldComponentUpdate`` 代码。``PureComponent`` 内部实现了对 ``props`` 和 ``state`` 进行浅层比较。
+``UNSAFE_componentWillUpdate``|初始渲染不会调用此方法。但是你不能此方法中调用 ``this.setState``，否则就无限循环了
+``getSnapshotBeforeUpdate``|替代``UNSAFE_componentWillUpdate``，在 render 之后，在更新之前（如：更新 DOM 之前）被调用。给了一个机会去获取 DOM 信息，计算得到并返回一个 snapshot，这个 snapshot 会作为 ``componentDidUpdate`` 的第三个参数传入。如果你不想要返回值，请返回 ``null``，不写的话控制台会有警告。 ``getSnapshotBeforeUpdate`` 方法是在`` UNSAFE_componentWillUpdate`` 后（如果存在的话），在 React 真正更改 DOM 前调用的，它获取到组件状态信息更加可靠。还有一个十分明显的好处：它调用的结果会作为第三个参数传入 ``componentDidUpdate``，避免了`` UNSAFE_componentWillUpdate`` 和``componentDidUpdate`` 配合使用时将组件临时的状态数据存在组件实例上浪费内存，getSnapshotBeforeUpdate 返回的数据在 componentDidUpdate 中用完即被销毁，效率更高。
+``componentDidUpdate``|-
+``componentWillUnmount``|执行一些清理操作，如定时器，订阅，网络请求，不要``setState``，因为没有效果
+``componentDidCatch``|``componentDidCatch(error, info) {}``如果发生错误，你可以通过调用 ``setState``使用 ``componentDidCatch``渲染降级 UI，但在未来的版本中将不推荐这样做。可以使用静态 ``getDerivedStateFromError``来处理降级渲染
+``getDerivedStateFromError``|``static getDerivedStateFromError(error) {}``此生命周期会在后代组件抛出错误后被调用。它将抛出的错误作为参数，并返回一个值以更新 ``state``。渲染阶段调用，因此不允许出现副作用
+```js
+        // 作者：LeviDing
+        // 链接：https://juejin.im/post/6844904199923187725
+        // 来源：掘金
+        // 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+        getSnapshotBeforeUpdate(prevProps, prevState) {
+            console.log('#enter getSnapshotBeforeUpdate');
+            return 'foo';
+        }
+
+        componentDidUpdate(prevProps, prevState, snapshot) {
+            console.log('#enter componentDidUpdate snapshot = ', snapshot);
+        }
+```
+
 ### 4.2 性能优化
+> - 
 ### 4.3 原则与规范
+> - import 顺序
+>> - 标准模块
+>> - 第三方模块
+>> - 自己代码导入（组件）
+>> - 特定于模块的导入（例如CSS，PNG等）
+>> - 仅用于测试的代码
+
 ### 4.4 小技巧
- 
+#### 1) ``Portal``
+> - 将组件挂载于父组件以外的组件或者节点
+> - ``ReactDom.createProtal(Comp, targetCom);``
+#### 2) Fragment
+> - 此节点作为容器不渲染，可以简写为``<></>``
+> - 不支持 key 和属性。
+#### 3) StrictMode
+> - 仅在开发模式下运行的检查工具
+> - 检查过时的API，不安全的生命周期，意外的副作用, 使用废弃的findDOMNode ``<StrictMode></StrictMode>``
