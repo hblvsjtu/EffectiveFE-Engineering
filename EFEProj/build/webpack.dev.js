@@ -5,18 +5,18 @@
  * @version 1.0.0
  */
 
-const webpack = require('webpack');
-const merge = require('webpack-merge');
-const common = require('./webpack.common.js');
-const { dev } = require('../config/index');
+const webpack = require("webpack");
+const merge = require("webpack-merge");
+const common = require("./webpack.common.js");
+const { dev } = require("../config/index");
 
 module.exports = merge(common, {
-  devtool: 'cheap-module-eval-source-map',
-  devServer: dev,
-  plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('development')
-    })
-  ]
+    devtool: "cheap-module-eval-source-map",
+    devServer: dev,
+    plugins: [
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.DefinePlugin({
+            "process.env.NODE_ENV": JSON.stringify("development"),
+        }),
+    ],
 });

@@ -5,10 +5,10 @@
  * @version 0.0.1
  */
 
-function add (a) {
-  return a + 1;
+function add(a) {
+    return a + 1;
 }
 
 module.exports = {
-  add
+    add,
 };
