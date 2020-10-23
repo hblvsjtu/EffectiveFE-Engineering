@@ -126,6 +126,15 @@
       - [5) 分割代码按需加载](#5-分割代码按需加载)
       - [6) Scope Hoisting](#6-scope-hoisting)
       - [7) 输出分析](#7-输出分析)
+  - [六、Axios](#六axios)
+    - [6.1 八股文](#61-八股文)
+      - [1) 相关概念](#1-相关概念-1)
+      - [2) 拦截器](#2-拦截器)
+  - [七、web新能优化](#七web新能优化)
+    - [7.1 css 优化](#71-css-优化)
+      - [1) 概念](#1-概念)
+      - [2) 减少reflow对性能的影响的建议](#2-减少reflow对性能的影响的建议)
+    - [7.2 图片延迟](#72-图片延迟)
 
 ## 一、HTML/CSS 优化
 
@@ -1447,3 +1456,167 @@ const SuperInput = getNewComp(Input, { a: 2 });
 
 #### 6) Scope Hoisting
 #### 7) 输出分析
+
+## 六、Axios
+
+### 6.1 八股文
+
+#### 1) 相关概念
+> - Axios 是一个基于 Promise 的 HTTP 客户端，拥有以下特性：
+>> - 支持promise API
+>> - 能够拦截请求和响应
+>> - 能够转换请求和相应数据
+>> - 能够取消请求和自动转换JSON数据
+>> - 客户端支持防御CSRF攻击
+>> - 同时支持浏览器和node环境
+
+#### 2) 拦截器
+> - ``axios.interceptors.request``和``axios.interceptors.response``对象提供的``use``方法
+```js
+        // 添加请求拦截器
+        axios.interceptors.request.use(function (config) {
+            config.headers.token = 'added by interceptor';
+            return config;
+        });
+
+        // 添加响应拦截器
+        axios.interceptors.response.use(function (data) {
+            data.data = data.data + ' - modified by interceptor';
+            return data;
+        });
+```
+> - 实现原理
+>> - 任务注册
+```js
+        // lib/core/Axios.js
+        function Axios(instanceConfig) {
+            this.defaults = instanceConfig;
+            this.interceptors = {
+                request: new InterceptorManager(),
+                response: new InterceptorManager()
+            };
+        }
+
+        // lib/core/InterceptorManager.js
+        function InterceptorManager() {
+            this.handlers = [];
+        }
+
+        InterceptorManager.prototype.use = function use(fulfilled, rejected) {
+            this.handlers.push({
+                fulfilled: fulfilled,
+                rejected: rejected
+            });
+            // 返回当前的索引，用于移除已注册的拦截器
+            return this.handlers.length - 1;
+        };
+s
+```
+>> - 任务编排 请求拦截是倒序，相应拦截是顺序
+```js
+        // lib/core/Axios.js
+        Axios.prototype.request = function request(config) {
+            config = mergeConfig(this.defaults, config);
+
+            // 省略部分代码
+            var chain = [dispatchRequest, undefined];
+            var promise = Promise.resolve(config);
+
+            // 任务编排
+            this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
+                chain.unshift(interceptor.fulfilled, interceptor.rejected);
+            });
+
+            this.interceptors.response.forEach(function pushResponseInterceptors(interceptor) {
+                chain.push(interceptor.fulfilled, interceptor.rejected);
+            });
+
+            // 任务调度
+            while (chain.length) {
+                promise = promise.then(chain.shift(), chain.shift());
+            }
+
+            return promise;
+        };
+```
+>> - 任务调度
+```js
+    // lib/core/Axios.js
+    Axios.prototype.request = function request(config) {
+        // 省略部分代码
+        var promise = Promise.resolve(config);
+        while (chain.length) {
+            promise = promise.then(chain.shift(), chain.shift());
+        }
+    }
+```
+
+## 七、web新能优化
+
+### 7.1 css 优化
+
+#### 1) 概念
+> - 是指一个元素外观的改变所触发的浏览器行为，浏览器会根据元素的新属性重新绘制，使元素呈现新的外观。这个过程就是重绘。重排必定会引发重绘，但重绘不一定会引发重排
+> - 常见的会引起重绘的属性 color、border-style、visibility、background、text-decoration、background-image、background-position、background-repeat、outline-color、outline、outline-style、border-radius、outline-width、box-shadow、background-size
+
+#### 2) 减少reflow对性能的影响的建议
+> - 不要一条一条地修改 DOM 的样式，预先定义好 class，然后修改 DOM 的 className
+> - 把 DOM 离线后修改，比如：先把 DOM 给 display:none (有一次 Reflow)，然后你修改100次，然后再把它显示出来
+> - 不要把 DOM 结点的属性值放在一个循环里当成循环里的变量
+> - 尽可能不要修改影响范围比较大的 DOM
+> - 为动画的元素使用绝对定位 absolute / fixed
+> - 不要使用 table 布局，可能很小的一个小改动会造成整个 table 的重新布局
+
+### 7.2 图片延迟
+```html
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Lazyload 1</title>
+            <style>
+                img {
+                display: block;
+                margin-bottom: 50px;
+                height: 200px;
+            }
+            </style>
+        </head>
+        <body>
+            <img src="images/loading.gif" data-src="images/1.png">
+            <img src="images/loading.gif" data-src="images/2.png">
+            <img src="images/loading.gif" data-src="images/3.png">
+            <img src="images/loading.gif" data-src="images/4.png">
+            <img src="images/loading.gif" data-src="images/5.png">
+            <img src="images/loading.gif" data-src="images/6.png">
+            <img src="images/loading.gif" data-src="images/7.png">
+            <img src="images/loading.gif" data-src="images/8.png">
+            <img src="images/loading.gif" data-src="images/9.png">
+            <img src="images/loading.gif" data-src="images/10.png">
+            <img src="images/loading.gif" data-src="images/11.png">
+            <img src="images/loading.gif" data-src="images/12.png">
+            <script>
+                function lazyload() {
+                    var images = document.getElementsByTagName('img');
+                    var len    = images.length;
+                    var n      = 0;      //存储图片加载到的位置，避免每次都从第一张图片开始遍历		
+                    return function() {
+                        var seeHeight = document.documentElement.clientHeight;
+                        var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+                        for (var i = n; i < len; i++) {
+                            if (images[i].offsetTop < seeHeight + scrollTop) {
+                                if (images[i].getAttribute('src') === 'images/loading.gif') {
+                                images[i].src = images[i].getAttribute('data-src');
+                            }
+                            n = n + 1;
+                            }
+                        }
+                    }
+                }
+                var loadImages = lazyload();
+                loadImages();          //初始化首页的页面图片
+                window.addEventListener('scroll', loadImages, false);
+            </script>
+        </body>
+        </html>
+```
