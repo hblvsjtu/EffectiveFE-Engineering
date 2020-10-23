@@ -19,18 +19,18 @@
 - [EffectiveFE-Engineering](#effectivefe-engineering)
   - [作者：冰红茶](#作者冰红茶)
   - [参考书籍：](#参考书籍)
-    - [高效前端：《Web 高效编程与优化实践》作者：李银城](#高效前端web高效编程与优化实践作者李银城)
+    - [高效前端：《Web 高效编程与优化实践》作者：李银城](#高效前端web-高效编程与优化实践作者李银城)
     - [《前端工程化 体系设计与实践》作者：周俊鹏](#前端工程化-体系设计与实践作者周俊鹏)
-  - [一、HTML/CSS 优化](#一htmlcss优化)
+  - [一、HTML/CSS 优化](#一htmlcss-优化)
     - [遵循几条大原则：](#遵循几条大原则)
     - [1.1 巧用伪类](#11-巧用伪类)
       - [1) hover](#1-hover)
       - [2) checked](#2-checked)
-      - [3) 前向伪类选择器 nth-last-of-type(n)](#3-前向伪类选择器nth-last-of-typen)
-    - [1.2 HTML 标签](#12-html标签)
+      - [3) 前向伪类选择器 nth-last-of-type(n)](#3-前向伪类选择器-nth-last-of-typen)
+    - [1.2 HTML 标签](#12-html-标签)
       - [1) 画一个三角形](#1-画一个三角形)
       - [2) 尽可能使用伪元素](#2-尽可能使用伪元素)
-  - [二、js 优化](#二js优化)
+  - [二、js 优化](#二js-优化)
     - [2.1 几个原则和模式](#21-几个原则和模式)
       - [1) 避免使用全局变量](#1-避免使用全局变量)
       - [2) 改变样式](#2-改变样式)
@@ -39,11 +39,11 @@
       - [4) 不要滥用闭包](#4-不要滥用闭包)
     - [2.2 其他优化策略](#22-其他优化策略)
       - [1) 其他优化策略](#1-其他优化策略)
-      - [1) Array 方法](#1-array方法)
+      - [1) Array方法](#1-array方法)
   - [三、Vue](#三vue)
     - [3.1 八股文](#31-八股文)
-      - [1) `compute` 和 `watch`有什么区别](#1-compute-和-watch有什么区别)
-      - [2) diff 算法](#2-diff算法)
+      - [1) ``compute`` 和 ``watch``有什么区别](#1-compute-和-watch有什么区别)
+      - [2) diff 算法](#2-diff-算法)
       - [3) 生命周期](#3-生命周期)
       - [4) 双向绑定](#4-双向绑定)
       - [5) 预编译](#5-预编译)
@@ -51,14 +51,14 @@
       - [7) 指令](#7-指令)
       - [8) 自定义指令](#8-自定义指令)
       - [9) 事件修饰符](#9-事件修饰符)
-      - [10) 混入 mixins](#10-混入mixins)
+      - [10) 混入 mixins](#10-混入-mixins)
       - [11) 自定义插件](#11-自定义插件)
       - [12) 过滤器](#12-过滤器)
-      - [13) nextTick 与更新循环](#13-nexttick与更新循环)
-      - [13) vue-loader 是什么](#13-vue-loader是什么)
+      - [13) nextTick 与更新循环](#13-nexttick-与更新循环)
+      - [13) vue-loader 是什么](#13-vue-loader-是什么)
     - [3.2 性能优化](#32-性能优化)
-      - [1) 在 map 循环中添加不同的 key 值，就地复用](#1-在map循环中添加不同的key值就地复用)
-      - [2) 对于不变的对象使用 Object.freeze](#2-对于不变的对象使用objectfreeze)
+      - [1) 在 map 循环中添加不同的 key 值，就地复用](#1-在-map-循环中添加不同的-key-值就地复用)
+      - [2) 对于不变的对象使用 Object.freeze](#2-对于不变的对象使用-objectfreeze)
       - [3) ` v-cloak`解决页面闪烁问题](#3-v-cloak解决页面闪烁问题)
       - [4) `v-once` 和 `v-pre` 提升性能](#4-v-once-和-v-pre-提升性能)
       - [5) 使用函数式组件](#5-使用函数式组件)
@@ -71,17 +71,17 @@
       - [4) `hookEvent `的使用](#4-hookevent-的使用)
       - [5) `watch`](#5-watch)
       - [6) 渲染函数中使用 JSX](#6-渲染函数中使用-jsx)
-    - [3.5 vue3.0 的特点](#35-vue30的特点)
-      - [1) 性能比 2.0 快 1.3~2 倍](#1-性能比20快132倍)
+    - [3.5 vue3.0 的特点](#35-vue30-的特点)
+      - [1) 性能比 2.0 快 1.3~2 倍](#1-性能比-20-快-132-倍)
       - [2) 使用`typescript`重构](#2-使用typescript重构)
       - [3) `Tree shaking support`](#3-tree-shaking-support)
       - [4) `Composition API`](#4-composition-api)
-      - [5) 自定义渲染 API `Custom Renderer API`](#5-自定义渲染api-custom-renderer-api)
+      - [5) 自定义渲染 API `Custom Renderer API`](#5-自定义渲染-api-custom-renderer-api)
       - [6) 更先进的组件](#6-更先进的组件)
       - [7) `v-model`统一双向数据流，删除`.sync`](#7-v-model统一双向数据流删除sync)
       - [8) `v-if`、`v-for`优先级问题](#8-v-ifv-for优先级问题)
       - [9) 去掉`functional: true`](#9-去掉functional-true)
-      - [10) vue 文件结构](#10-vue文件结构)
+      - [10) vue 文件结构](#10-vue-文件结构)
       - [11) `Teleport` 传送门](#11-teleport-传送门)
       - [12) Fragments](#12-fragments)
   - [四、React](#四react)
@@ -104,6 +104,28 @@
       - [1) `Portal`](#1-portal)
       - [2) Fragment](#2-fragment)
       - [3) StrictMode](#3-strictmode)
+  - [五、webpack](#五webpack)
+    - [5.1 八股文](#51-八股文)
+      - [1) 相关概念](#1-相关概念)
+      - [2) 构建过程](#2-构建过程)
+      - [3) 配置属性](#3-配置属性)
+      - [4) sourceMap](#4-sourcemap)
+    - [5.2 构建速度优化](#52-构建速度优化)
+      - [1) 多线程压缩](#1-多线程压缩)
+      - [2) DLLPlugin预编译](#2-dllplugin预编译)
+      - [3) 开启缓存](#3-开启缓存)
+      - [4) 缩小构建目标](#4-缩小构建目标)
+    - [5.3 优化使用体验](#53-优化使用体验)
+      - [1) 监听文件自动刷新 watch](#1-监听文件自动刷新-watch)
+      - [2) 开启模块热更新](#2-开启模块热更新)
+    - [5.4 优化输出质量](#54-优化输出质量)
+      - [1) 区分环境](#1-区分环境)
+      - [2) 压缩代码](#2-压缩代码)
+      - [3) 使用tree shaking](#3-使用tree-shaking)
+      - [4) 提取公共代码](#4-提取公共代码)
+      - [5) 分割代码按需加载](#5-分割代码按需加载)
+      - [6) Scope Hoisting](#6-scope-hoisting)
+      - [7) 输出分析](#7-输出分析)
 
 ## 一、HTML/CSS 优化
 
@@ -1327,3 +1349,101 @@ const SuperInput = getNewComp(Input, { a: 2 });
 
 > - 仅在开发模式下运行的检查工具
 > - 检查过时的 API，不安全的生命周期，意外的副作用, 使用废弃的 findDOMNode `<StrictMode></StrictMode>`
+
+## 五、webpack
+
+### 5.1 八股文
+
+#### 1) 相关概念
+> - ``Entry`` 打包入口
+> - ``Module`` 模块 一切文件皆可视为模块 从入口开始递归所有模块
+> - ``Chunk`` 代码块 一个``chunk``由多个模块组合而成，用于代码的合并与分割
+> - ``Loader`` 模块转换器 用于将模块的原内容按照去求转换成新内容
+> - ``Plugin`` 拓展插件
+> - ``Output`` 输出
+
+#### 2) 构建过程
+> - 从``Entry``出发依次递归寻找``Module``，利用``Loader``并辅助以``plugin``对``Module``进行转换，最后以``entry``为单位进行分组，其依赖会被打到同一个``chunk``，并输出文件
+
+#### 3) 配置属性
+> - ``entry`` 入口
+>> - 可以是字符串、数组或者对象，如果是字符串、数组，最后只会输出一个``chunk``，且使用``Output.library``时只有最后一个入口文件的模块被导出
+>> - 也可以写成同步函数或者返回``promise``的异步函数
+> - ``output`` 配置如何输出
+>> - ``filename`` vs ``chunkFilename`` ``Entry``的键值对键值，``chunkFilename`` 非``Entry``入口的``chunk``名称，比如动态加载或者``CommonChunkPlugin``(提取第三方库和公共模块)
+>> - ``path`` vs ``publishPath`` ``path``表示打包出来的目录 ``publishPath``表示打包后需要上传服务器的地址
+>> - ``library`` vs ``libraryTarget`` ``library``表示导出库的名称 ``libraryTarget``导出方式，比如``var``/``commonjs``/``commonjs2``/``this``/``window``/``global``/``umd``/``libraryExport`` 表示导出的子模块，默认``default``
+> - ``module``
+>> - 使用``loader``的``test`` ``include`` 和``exclude``可以减少搜索范围加快速度
+>> - 使用noParse可以避免递归一些没有依赖模块的文件，比如``jQuery``, ``noParse: /jquery/, //不去解析jquery中的依赖库``
+> - ``resolve`` 配置寻找模块的代码
+>> - ``alias`` 路径别名
+>> - ``mainFields`` 优先使用那份模块的代码（在``package.json``里面对应目录）比如：``mainFields: ['jsnext:main', 'browser', 'main'];``
+>> - ``extensions`` 文件路径后缀优先级 ``extensions: ['.ts', '.js', 'json'];``
+>> - ``modules`` 配置``webpack``在哪里寻找第三方模块，默认只会在``node_modules``里面找，如果有很多需要导入的文件在``src/components``文件夹中，可以配置``modules: ['node_modules', 'src/components']``，这样可以直接使用``import button from 'Button'``进行导入
+> - ``plugin`` 配置拓展插件
+>> - 
+> - ``devServer``
+
+#### 4) sourceMap
+> - ``cheap`` 不包含列信息，且不包含loader信息
+> - ``cheap-mudule`` 不包含列信息，包含loader信息
+> - ``inline`` 把``sourceMap``以``hash``字符串的形式写进文件中，一般不会在生产环境中使用
+> - 在开发环境中，``webpack``是不支持``sourceMap``的，需要使用``source-map-loader``进行加载，且要写在最前面避免其他``loader``对``sourcemap``进行转换 ``enforce: 'pre'``
+
+### 5.2 构建速度优化
+
+#### 1) 多线程压缩
+> - webpack3 happy-pack
+> - webpack4 uglifyjs-webpack-plugin | parallel-uglify-plugin | terser-webpack-plugin
+
+#### 2) DLLPlugin预编译
+> - 创建一个manifest.json文件，DllReferencePlugin使用它来映射依赖项
+
+#### 3) 开启缓存
+> - 开启``babel-loader``缓存（``babel-loader?cacheDirectory=true``)
+> - 开启terser-webpack-plugin缓存
+> - 使用``hard-source-webpack-plugin``提升模块转换阶段缓存
+
+#### 4) 缩小构建目标
+> - include
+> - resolve - alias
+> - resolve - modules
+> - resolve - extensions
+> - resolve - mainFields: ['main'] // package.json指定的入口文件 ``jsnext:main`` ``browser`` ``main``
+
+### 5.3 优化使用体验
+#### 1) 监听文件自动刷新 watch
+> - 原理 定时获取文件的最后编辑时间，每次保存最新的最后编辑时间，下次更新的时候与上次比较，如果不相同则认为文件发生了变化。但是文件发生了变化也不会第一时间告知监听者，而是先缓存起来，收集一段时间后再一次性告诉监听者，而这个时间可以设置，避免频繁更新。
+> - 自动刷新浏览器的原理
+>> - 借助浏览器拓展去通过浏览器的接口去刷新，比如LiveEdit插件
+>> - 向要开发的网页中注入客户端代码，通过代理客户端刷新整个页面
+>> - 将要开发的网页装进一个iframe中，通过刷新iframe去看到最新的效果
+
+
+#### 2) 开启模块热更新
+> - 在不刷新页面的情况下更新目标节点
+> - 原理：源码发生变化的时候，只需要重新编译发生变化的模块，再替换掉相应的老模块
+> - HMR的优点在于可以保存应用的状态，提高开发效率
+> - 底层原理 Server端使用webpack-dev-server去启动本地服务，内部实现主要使用了webpack、express、websocket。
+>> - 使用express启动本地服务，当浏览器访问资源时对此做响应。
+>> - 服务端和客户端使用websocket实现长连接
+>> - webpack监听源文件的变化，即当开发者保存文件时触发webpack的重新编译。每次编译都会生成hash值、已改动模块的json文件、已改动模块代码的js文件。编译完成后通过socket向客户端推送当前编译的hash戳，客户端的websocket监听到有文件改动推送过来的hash戳，会和上一次对比。一致则走缓存，不一致则通过ajax和jsonp向服务端获取最新资源
+>> - 使用内存文件系统去替换有修改的内容实现局部刷新
+>> - 为什么使用JSONP而不用socke通信获取更新过的代码？因为通过socket通信获取的是一串字符串需要再做处理。而通过JSONP获取的代码可以直接执行。
+
+### 5.4 优化输出质量
+#### 1) 区分环境
+#### 2) 压缩代码
+#### 3) 使用tree shaking
+#### 4) 提取公共代码
+> - 好处：base.js一旦被用户浏览器缓存，那么在任何页面都不需要重新下载一份，提升客户体验
+> - 业务代码.js
+> - common.js
+> - base.js 所有页面都会用的到的基础库，例如react和react.dom
+#### 5) 分割代码按需加载
+> - ``import(*)`` 语法
+> - 用在路由切换的场合用得比较多
+
+#### 6) Scope Hoisting
+#### 7) 输出分析
